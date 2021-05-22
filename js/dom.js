@@ -2,10 +2,10 @@ function displayTitleList(response, type, term, offset) {
     let i;
     //Gestion des erreurs
     let title = "Unknown title";
+    let titleId = "";
     let artist = "Unknow artist";
     let album = "Unknown artist";
     let albumId = "";
-    let rating = "Unkown rating";
     let titleLength = "Unknown length";
     let count = response.count;
     let recordings = response.recordings;
@@ -23,6 +23,7 @@ function displayTitleList(response, type, term, offset) {
         resultHeader.appendChild(headerContent);
         //Pour chaque titre trouvé via la recherche
         for (i = 0; i < recordings.length; i++) {
+            titleId = recordings[i].id;
             if (recordings[i].hasOwnProperty('title')) {
                 title = recordings[i].title;
             }
@@ -34,20 +35,17 @@ function displayTitleList(response, type, term, offset) {
                 artist = artist.join(" & ");
             }
             if (recordings[i].hasOwnProperty('releases')) {
-                album = recordings[i].releases[0].title;
-                albumId = recordings[i].releases[0].id;
-                if (recordings[i].releases[0].hasOwnProperty('release-group')) {
-                    albumId = recordings[i].releases[0]["release-group"].id;
+                album = [];
+                albumId = recordings[i].releases[0]["release-group"].id;
+                for (j = 0; j < recordings[i].releases.length; j++) {
+                    album.push(recordings[i].releases[j].title);
                 }
-            }
-            if (recordings[i].hasOwnProperty('score')) {
-                rating = recordings[i].score;
             }
             if (recordings[i].hasOwnProperty('length')) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
-            let listItem = constructTitleList(title, artist, album, offset + i, rating, titleLength, albumId);
+            let listItem = constructTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -71,7 +69,7 @@ function displayTitleList(response, type, term, offset) {
 
 
 //Constructeur de la liste Title
-function constructTitleList(title, artist, album, nb, rating, titleLength, albumId) {
+function constructTitleList(title, artist, album, nb, titleLength, albumId, titleId) {
     let listItem = document.createElement('ul');
     let listItemTitle = document.createElement('li');
     listItemTitle.textContent = title;
@@ -80,7 +78,11 @@ function constructTitleList(title, artist, album, nb, rating, titleLength, album
     listItemArtist.textContent = artist;
     listItemArtist.classList.add('result-list-artist');
     let listItemAlbum = document.createElement('li');
-    listItemAlbum.textContent = album;
+    if (typeof album == 'string') {
+        listItemAlbum.textContent = album;
+    } else {
+        listItemAlbum.textContent = album[0];
+    }
     listItemAlbum.classList.add('result-list-album');
     let listItemNumber = document.createElement('li');
     listItemNumber.classList.add('result-list-number');
@@ -89,7 +91,7 @@ function constructTitleList(title, artist, album, nb, rating, titleLength, album
     //Pour le header de la liste
     if (nb === "#") {
         listItemNumber.textContent = nb;
-        listItemBtn.textContent = rating.toString() + " entries";
+        listItemBtn.textContent = titleLength.toString() + " entries";
     } else {
         listItemNumber.textContent = nb + 1;
         let listBtn = document.createElement('button');
@@ -97,7 +99,7 @@ function constructTitleList(title, artist, album, nb, rating, titleLength, album
         listBtn.classList.add('modal-btn', 'btn-primary');
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
-            displayModal(title, artist, album, rating, titleLength, albumId);
+            displayModal(title, artist, album, titleLength, albumId, titleId);
         });
         listItemBtn.appendChild(listBtn);
     }
@@ -118,20 +120,31 @@ function constructLastItem() {
 }
 
 
-function displayModal(title, artist, album, rating, titleLength, albumId) {
+function displayModal(title, artist, album, titleLength, albumId, titleId) {
     modalHeader.textContent = "";
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
-    modalAlbum.textContent = album;
-    modalRating.textContent = displayRating(rating);
+    modalAlbum.textContent = album.join(" | ");
+    getRating(titleId, displayRating);
     getGenres(albumId, displayGenres);
+    console.log(albumId);
 }
 
-function displayRating(score) {
-    score += "%";
-    modalRating.style.backgroundSize = score;
-    return score;
+function displayRating(ratings) {
+    let rating = "";
+    modalRating.style.backgroundSize = 0;
+    if (ratings["votes-count"] > 0) {
+        rating = ratings.value;
+        console.log(rating);
+        rating *= 20;
+        console.log(rating);
+        rating += "%";
+        modalRating.style.backgroundSize = rating;
+    } else {
+        rating = "No rating found for this title";
+    }
+    modalRating.textContent = rating;
 }
 
 function displayGenres(genres) {
@@ -163,4 +176,8 @@ function displayGenres(genres) {
         //On affiche la chaine de caractères
         modalGenres.textContent = genreArrayFinal;
     }
+}
+
+function displayCoverArt(response) {
+    console.log(response);
 }

@@ -380,7 +380,6 @@ ul.result-list-item {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: .1rem solid var(--lightBlue);
 }
 
 .modal-header-title {
@@ -398,14 +397,14 @@ ul.result-list-item {
 
 .modal-body {
     padding: 1rem;
-}
-
-.modal-list {
+    border-top: .1rem solid var(--lightBlue);
     border-bottom: .1rem solid var(--lightBlue);
 }
 
-.modal-list li {
-    margin-bottom: 3rem;
+.modal-list {
+    display: grid;
+    gap: 4rem;
+    padding: 2rem;
 }
 
 .modal-list-item-title {
@@ -414,8 +413,7 @@ ul.result-list-item {
 }
 
 .modal-list-title p,
-.modal-list-artist p,
-.modal-list-album p {
+.modal-list-artist p {
     font-size: 2.4rem;
 }
 
@@ -435,16 +433,16 @@ ul.result-list-item {
     background-size: 0;
     background-repeat: no-repeat;
     text-align: center;
-    font-weight: 700;
+    font-size: 1.8rem;
 }
 
-.modal-list-genres {
-    font-size: 2rem;
+.modal-list-genres,
+.modal-list-album p {
+    font-size: 1.8rem;
 }
 
 @media screen and (min-width: 48em){
     .modal-list {
-        display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -460,6 +458,6 @@ ul.result-list-item {
     }
 
     .modal-list-album {
-        grid-column: 1/2;
+        grid-column: 1/3;
     }
 } 

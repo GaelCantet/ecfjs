@@ -50,7 +50,7 @@ function getGenres(id, callback) {
     request.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     request.addEventListener('loadstart', function() {
-        modalBody.querySelector('.modal-list .modal-list-genres p').textContent = "Loading...";
+        modalGenres.textContent = "Loading...";
     });
     request.addEventListener("readystatechange", function () {
         if (request.readyState === XMLHttpRequest.DONE) {
@@ -59,7 +59,30 @@ function getGenres(id, callback) {
                 response = response.genres;
                 callback(response);
             } else {
-                modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(4) p').textContent = "Something went wrong";
+                modalGenres.textContent = "Something went wrong";
+            }
+        }
+    });
+    request.send();
+}
+
+function getRating(titleId, callback) {
+    const request = new XMLHttpRequest();
+    //URL de la requête
+    let searchUrl = "https://musicbrainz.org/ws/2/recording/" + encodeURIComponent(titleId) + "?inc=ratings&fmt=json";
+    request.open("GET", searchUrl, true);
+    //Affichage LOADING pendant le chargement de la requête
+    request.addEventListener('loadstart', function() {
+        modalRating.textContent = "Loading...";
+    });
+    request.addEventListener("readystatechange", function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            if (request.status === 200) {
+                let response = JSON.parse(request.responseText);
+                response = response.rating;
+                callback(response);
+            } else {
+                modalRating.textContent = "Something went wrong";
             }
         }
     });
