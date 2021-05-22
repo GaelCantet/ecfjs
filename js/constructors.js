@@ -29,7 +29,7 @@ function constructTitleList(title, artist, album, nb, titleLength, albumId, titl
         listBtn.classList.add('modal-btn', 'btn-primary');
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
-            displayModal(title, artist, album, titleLength, albumId, titleId);
+            displayModal(nb, title, artist, album, titleLength, albumId, titleId);
         });
         listItemBtn.appendChild(listBtn);
     }

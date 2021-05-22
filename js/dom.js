@@ -67,8 +67,8 @@ function displayTitleList(response, type, term, offset) {
     } 
 }
 
-function displayModal(title, artist, album, titleLength, albumId, titleId) {
-    modalHeader.textContent = "";
+function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
+    modalHeader.textContent = nb + 1;
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
