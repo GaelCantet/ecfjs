@@ -14,7 +14,7 @@ const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-length
 const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
 const modalAlbum = modalBody.querySelector('.modal-list .modal-list-album p');
-const modalRating = modalBody.querySelector('.modal-list .modal-list-rating p');
+const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div');
 
 closeModal.addEventListener('click', function() {
     modal.classList.remove('open-modal');

@@ -121,7 +121,7 @@ function constructLastItem() {
 function displayModal(title, artist, album, rating, titleLength, albumId) {
     modalHeader.textContent = "";
     modalTitle.textContent = title;
-    modalTitleLength.textContent = titleLength;
+    modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
     modalAlbum.textContent = album;
     modalRating.textContent = displayRating(rating);
@@ -129,6 +129,8 @@ function displayModal(title, artist, album, rating, titleLength, albumId) {
 }
 
 function displayRating(score) {
+    score += "%";
+    modalRating.style.backgroundSize = score;
     return score;
 }
 
