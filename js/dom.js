@@ -9,8 +9,6 @@ function displayTitleList(response, type, term, offset) {
     let rating = "Unkown rating";
     let titleLength = "Unknown length";
     let count = response.count;
-    console.log(count);
-    console.log(response);
     let recordings = response.recordings;
     //Gestion pas de résultat
     if (count == 0) {
@@ -129,20 +127,24 @@ function displayModal(title, artist, album, rating, titleLength, albumId) {
 }
 
 function displayGenres(genres) {
-    let genreArray = [];
+    let genreArrayTemp = [];
+    let genreArrayFinal = [];
     for (i = 0; i < genres.length; i++) {
         if (genres[i].count > 1) {
             let genreArrayItem = [genres[i].name, genres[i].count]
-            genreArray.push(genreArrayItem);
+            genreArrayTemp.push(genreArrayItem);
         }
     }
-    genreArray.sort(function(a, b){
+    genreArrayTemp.sort(function(a, b){
         return b[1]-a[1]
     });
-    console.log(genreArray);
-    if (genreArray.length > 0) {
-        genreArray = genreArray.join(", ");
-        modalGenres.textContent = genreArray;
+    if (genreArrayTemp.length > 0) {
+        for (i = 0; i < genreArrayTemp.length; i++) {
+            genreArrayFinal.push(genreArrayTemp[i][0]);
+        }
+        console.log(genreArrayFinal);
+        genreArrayFinal = genreArrayFinal.join(", ");
+        modalGenres.textContent = genreArrayFinal;
     } else {
         modalGenres.textContent = "No genre found for this album";
     }
