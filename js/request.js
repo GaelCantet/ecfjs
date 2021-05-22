@@ -50,7 +50,7 @@ function getGenres(id, callback) {
     request.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     request.addEventListener('loadstart', function() {
-        modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(4) p').textContent = "Loading...";
+        modalBody.querySelector('.modal-list .modal-list-genres p').textContent = "Loading...";
     });
     request.addEventListener("readystatechange", function () {
         if (request.readyState === XMLHttpRequest.DONE) {

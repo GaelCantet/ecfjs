@@ -9,12 +9,12 @@ const modal = document.querySelector('.modal');
 const modalHeader = modal.querySelector('.modal-header-title');
 const modalBody = modal.querySelector('.modal-body');
 const closeModal = modal.querySelector('header button');
-const modalTitle = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(1) p');
-const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(2) p');
-const modalArtist = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(3) p');
-const modalGenres = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(4) p');
-const modalAlbum = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(5) p');
-const modalRating = modalBody.querySelector('.modal-list .modal-list-item:nth-of-type(6) p');
+const modalTitle = modalBody.querySelector('.modal-list .modal-list-title p');
+const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-length p');
+const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
+const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
+const modalAlbum = modalBody.querySelector('.modal-list .modal-list-album p');
+const modalRating = modalBody.querySelector('.modal-list .modal-list-rating p');
 
 closeModal.addEventListener('click', function() {
     modal.classList.remove('open-modal');

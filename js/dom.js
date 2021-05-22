@@ -3,7 +3,6 @@ function displayTitleList(response, type, term, offset) {
     //Gestion des erreurs
     let title = "Unknown title";
     let artist = "Unknow artist";
-    let artistId = "";
     let album = "Unknown artist";
     let albumId = "";
     let rating = "Unkown rating";
@@ -28,8 +27,11 @@ function displayTitleList(response, type, term, offset) {
                 title = recordings[i].title;
             }
             if (recordings[i].hasOwnProperty('artist-credit')) {
-                artist = recordings[i]["artist-credit"][0].name;
-                artistId = recordings[i]['artist-credit'][0].artist.id;
+                artist = [];
+                for (let j = 0; j < recordings[i]["artist-credit"].length; j++) {
+                    artist.push(recordings[i]["artist-credit"][j].name);
+                }
+                artist = artist.join(" & ");
             }
             if (recordings[i].hasOwnProperty('releases')) {
                 album = recordings[i].releases[0].title;
@@ -39,7 +41,7 @@ function displayTitleList(response, type, term, offset) {
                 }
             }
             if (recordings[i].hasOwnProperty('score')) {
-                rating = (recordings[i].score/20).toPrecision(2);
+                rating = recordings[i].score;
             }
             if (recordings[i].hasOwnProperty('length')) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
@@ -122,30 +124,41 @@ function displayModal(title, artist, album, rating, titleLength, albumId) {
     modalTitleLength.textContent = titleLength;
     modalArtist.textContent = artist;
     modalAlbum.textContent = album;
-    modalRating.textContent = rating;
+    modalRating.textContent = displayRating(rating);
     getGenres(albumId, displayGenres);
 }
 
+function displayRating(score) {
+    return score;
+}
+
 function displayGenres(genres) {
+    //Initialisation tableaux temporaire et final
     let genreArrayTemp = [];
     let genreArrayFinal = [];
-    for (i = 0; i < genres.length; i++) {
-        if (genres[i].count > 1) {
-            let genreArrayItem = [genres[i].name, genres[i].count]
-            genreArrayTemp.push(genreArrayItem);
+    //Si aucun genre n'est retourné
+    if (genres.length === 0) {
+        modalGenres.textContent = "No genre found for this album";
+    } else { //Si la réponse retourne au moins un genre
+        for (i = 0; i < genres.length; i++) {
+            //On ne garde que les genres ayant un nombre positif de votes
+            if (genres[i].count > 0) {
+                //On créée un tableau à deux dimensions de forme [nomDuGenre, nbDeVotes]
+                let genreArrayItem = [genres[i].name, genres[i].count]
+                genreArrayTemp.push(genreArrayItem);
+            }
         }
-    }
-    genreArrayTemp.sort(function(a, b){
-        return b[1]-a[1]
-    });
-    if (genreArrayTemp.length > 0) {
+        //On trie le tableau par ordre décroissant du nombre de votes
+        genreArrayTemp.sort(function(a, b){
+            return b[1]-a[1]
+        });
+        //On construit le tableau final avec les uniquement les genres par ordre de popularité
         for (i = 0; i < genreArrayTemp.length; i++) {
             genreArrayFinal.push(genreArrayTemp[i][0]);
         }
-        console.log(genreArrayFinal);
+        //On créée une chaine de caractères à partir du tableau final
         genreArrayFinal = genreArrayFinal.join(", ");
+        //On affiche la chaine de caractères
         modalGenres.textContent = genreArrayFinal;
-    } else {
-        modalGenres.textContent = "No genre found for this album";
     }
 }
