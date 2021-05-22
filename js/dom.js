@@ -72,10 +72,10 @@ function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
-    modalAlbum.textContent = album.join(" | ");
+    modalAlbum.textContent = album.join("  |  ");
     getRating(titleId, displayRating);
     getGenres(albumId, displayGenres);
-    console.log(albumId);
+    getCoverArts(albumId, displayCoverArt);
 }
 
 function displayRating(ratings) {
@@ -131,4 +131,15 @@ function displayGenres(genres) {
 
 function displayCoverArt(response) {
     console.log(response);
+    coverArtsContainer.innerHTML = "";
+    if (response.length < 1) {
+        modalFooterMessage.textContent = "No cover art found for this album";
+    } else {
+        modalFooterMessage.textContent = "";
+        for (i = 0; i < response.length; i++) {
+            
+            let coverArt = constructCoverArt(response[i].image);
+            coverArtsContainer.appendChild(coverArt);
+        }
+    }
 }

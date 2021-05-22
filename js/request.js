@@ -43,10 +43,10 @@ function getBySearch(type, term, callback, offset) {
     request.send();
 }
 
-function getGenres(id, callback) {
+function getGenres(albumId, callback) {
     const request = new XMLHttpRequest();
     //URL de la requête
-    let searchUrl = "https://musicbrainz.org/ws/2/release-group/" + encodeURIComponent(id) + "?inc=genres&fmt=json";
+    let searchUrl = "https://musicbrainz.org/ws/2/release-group/" + encodeURIComponent(albumId) + "?inc=genres&fmt=json";
     request.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     request.addEventListener('loadstart', function() {
@@ -83,6 +83,31 @@ function getRating(titleId, callback) {
                 callback(response);
             } else {
                 modalRating.textContent = "Something went wrong";
+            }
+        }
+    });
+    request.send();
+}
+
+function getCoverArts(albumId, callback) {
+    const request = new XMLHttpRequest();
+    //URL de la requête
+    let searchUrl = "https://coverartarchive.org/release-group/" + encodeURIComponent(albumId);
+    request.open("GET", searchUrl, true);
+    //Affichage LOADING pendant le chargement de la requête
+    request.addEventListener('loadstart', function() {
+        modalFooterMessage.textContent = "Loading...";
+    });
+    request.addEventListener("readystatechange", function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            if (request.status === 200) {
+                let response = JSON.parse(request.responseText);
+                response = response.images;
+                callback(response);
+            } else if (request.status === 404) {
+                modalFooterMessage.textContent = "No cover art found for this album";
+            } else {
+                modalFooterMessage.textContent = "Something went wrong";
             }
         }
     });

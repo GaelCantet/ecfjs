@@ -18,7 +18,11 @@ const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div'
 
 closeModal.addEventListener('click', function() {
     modal.classList.remove('open-modal');
+    coverArtsContainer.innerHTML = "";
 });
+//MODAL FOOTER
+const modalFooterMessage = modal.querySelector('.modal-footer-message');
+const coverArtsContainer = modal.querySelector('.cover-arts');
 
 document.querySelector('.search-form').addEventListener('submit', function(ev) {
     ev.preventDefault();

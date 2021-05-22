@@ -48,3 +48,10 @@ function constructLastItem() {
     lastItem.setAttribute('id', 'last-item');
     return lastItem;
 }
+
+function constructCoverArt(src) {
+    let coverArt = document.createElement('img');
+    coverArt.setAttribute('src', src);
+    coverArt.classList.add('cover-art');
+    return coverArt;
+}
