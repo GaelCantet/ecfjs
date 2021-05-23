@@ -137,6 +137,7 @@ body {
     border: none;
 }
 
+
 @media screen and (min-width: 48rem) {
     .search-form {
         flex-direction: row;
@@ -150,6 +151,10 @@ body {
 
     .form-group:last-of-type {
         margin-top: auto;
+    }
+
+    .form-group:last-of-type .btn-primary {
+        padding: 1rem;
     }
 }
 
