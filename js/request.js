@@ -92,7 +92,7 @@ function getRating(titleId, callback) {
 function getCoverArts(albumId, callback) {
     const request = new XMLHttpRequest();
     //URL de la requête
-    let searchUrl = "https://coverartarchive.org/release-group/" + encodeURIComponent(albumId);
+    let searchUrl = "https://coverartarchive.org/release/" + encodeURIComponent(albumId);
     request.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     request.addEventListener('loadstart', function() {

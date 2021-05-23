@@ -441,6 +441,19 @@ ul.result-list-item {
     font-size: 1.8rem;
 }
 
+.album-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.album-list-item {
+    margin-right: .5rem;
+    margin-bottom: .5rem;
+    padding: .5rem;
+    background-color: var(--primary);
+    border-radius: .4rem;
+}
+
 @media screen and (min-width: 48em){
     .modal-list {
         grid-template-columns: repeat(2, 1fr);
@@ -470,15 +483,28 @@ ul.result-list-item {
 
 .modal-footer-title {
     margin-bottom: 2rem;
+    font-weight: normal;
 }
 
 .cover-arts {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: auto;
     gap: 3rem;
 }
 
 .cover-art {
     object-fit: cover;
     object-position: center;
+}
+
+@media screen and (min-width: 48em) {
+    .cover-arts {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 62em) {
+    .cover-arts {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }

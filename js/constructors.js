@@ -1,5 +1,5 @@
 //Constructeur de la liste Title
-function constructTitleList(title, artist, album, nb, titleLength, albumId, titleId) {
+function constructTitleList(title, artist, album, nb, titleLength, albumId, titleId, genreId) {
     let listItem = document.createElement('ul');
     let listItemTitle = document.createElement('li');
     listItemTitle.textContent = title;
@@ -29,7 +29,7 @@ function constructTitleList(title, artist, album, nb, titleLength, albumId, titl
         listBtn.classList.add('modal-btn', 'btn-primary');
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
-            displayModal(nb, title, artist, album, titleLength, albumId, titleId);
+            displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId);
         });
         listItemBtn.appendChild(listBtn);
     }
@@ -49,9 +49,21 @@ function constructLastItem() {
     return lastItem;
 }
 
+//Constructeur liste d'albums
+function constructAlbumlist(albumArray) {
+    for (i = 0; i < albumArray.length; i++) {
+        let albumListItem = document.createElement('li');
+        albumListItem.classList.add('album-list-item');
+        albumListItem.textContent = albumArray[i];
+        modalAlbum.appendChild(albumListItem);
+    }
+}
+
+//Constructeur d'une image cover art
 function constructCoverArt(src) {
     let coverArt = document.createElement('img');
     coverArt.setAttribute('src', src);
+    coverArt.setAttribute('alt', src);
     coverArt.classList.add('cover-art');
     return coverArt;
 }

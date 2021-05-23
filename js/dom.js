@@ -6,6 +6,7 @@ function displayTitleList(response, type, term, offset) {
     let artist = "Unknow artist";
     let album = "Unknown artist";
     let albumId = "";
+    let genreId = "";
     let titleLength = "Unknown length";
     let count = response.count;
     let recordings = response.recordings;
@@ -36,16 +37,18 @@ function displayTitleList(response, type, term, offset) {
             }
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
-                albumId = recordings[i].releases[0]["release-group"].id;
+                albumId = [];
+                genreId = recordings[i].releases[0]["release-group"].id;
                 for (j = 0; j < recordings[i].releases.length; j++) {
                     album.push(recordings[i].releases[j].title);
+                    albumId.push(recordings[i].releases[j].id);
                 }
             }
             if (recordings[i].hasOwnProperty('length')) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
-            let listItem = constructTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
+            let listItem = constructTitleList(title, artist, album, offset + i, titleLength, albumId, titleId, genreId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -67,15 +70,20 @@ function displayTitleList(response, type, term, offset) {
     } 
 }
 
-function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
-    modalHeader.textContent = nb + 1;
+function displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId) {
+    nb++;
+    modalHeader.textContent = "#" + nb;
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
-    modalAlbum.textContent = album.join("  |  ");
+    constructAlbumlist(album);
     getRating(titleId, displayRating);
-    getGenres(albumId, displayGenres);
-    getCoverArts(albumId, displayCoverArt);
+    console.log(albumId[0]);
+    for(i = 0; i < albumId.length; i++) {
+        getCoverArts(albumId[i], displayCoverArt);
+    }
+    getGenres(genreId, displayGenres);
+    
 }
 
 function displayRating(ratings) {
@@ -130,15 +138,25 @@ function displayGenres(genres) {
 }
 
 function displayCoverArt(response) {
-    console.log(response);
-    coverArtsContainer.innerHTML = "";
+    //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (response.length < 1) {
         modalFooterMessage.textContent = "No cover art found for this album";
-    } else {
+    } else { //Sinon
         modalFooterMessage.textContent = "";
+        //Pour chaque image disponible
         for (i = 0; i < response.length; i++) {
-            
-            let coverArt = constructCoverArt(response[i].image);
+            let coverArt = "";
+            //On cherche d'abord les plus petites
+            if(response[i].thumbnails.hasOwnProperty('250')) {
+                coverArt = response[i].thumbnails['250'];
+            } else if(response[i].thumbnails.hasOwnProperty('small')) {
+                coverArt = response[i].thumbnails['small'];
+            } else { //Ou on prend l'image par défaut
+                coverArt = response[i].image;
+            }
+            //On construit l'élément image et ses attributs
+            coverArt = constructCoverArt(coverArt);
+            //On affiche l'image dans le container
             coverArtsContainer.appendChild(coverArt);
         }
     }
