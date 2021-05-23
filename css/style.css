@@ -99,6 +99,18 @@ body {
     color: var(--bgDark);
 }
 
+.to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    background-color: var(--bgDark);
+    transition: .3s;
+}
+
 /*SEARCH-FORM*/
 .main-header {
     padding-top: 4rem;

@@ -13,13 +13,16 @@ let titleLength;
 let count;
 let recordings;
 
+//BOUTON DE RETOUR EN HAUT DE PAGE
+const toTopBtn = document.querySelector('.to-top');
+
 //SEARCH FORM
 const inputSearch = document.getElementById('search-input');
 const typeSearch = document.getElementById('type-input');
 //RESULT LIST
 const resultHeader = document.querySelector('.result-header .container');
 const resultList = document.getElementById('search-result');
-//MODAL
+//MODALE
 const modal = document.querySelector('.modal');
 const modalHeader = modal.querySelector('.modal-header-title');
 const modalBody = modal.querySelector('.modal-body');
@@ -59,4 +62,28 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
         let term = inputSearch.value.split(" ").join("+");
         getBySearch(typeSearch.value, term, displayTitleList, 0);
     }
+});
+
+//EVENT D'APPARITION DU BOUTTON TO-TOP AU SCROLL
+window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 600) { //Si on scroll au délà de 600px du heut de page
+        //Le display de toTopBtn change en flex
+        toTopBtn.style.display = "flex";
+        //Son opacité change .3s après
+        setTimeout(function() {
+            toTopBtn.style.opacity = 1;
+        }, 300);
+    } else { //Sinon
+        //L'opacité de toTopBtn change
+        toTopBtn.style.opacity = 0;
+        //Son display passe à none .3s après
+        setTimeout(function() {
+            toTopBtn.style.display = "none";
+        }, 300);
+    }
+});
+
+//EVENT DE RETOUR EN HAUT DE PAGE
+toTopBtn.addEventListener('click', function() {
+    window.scrollTo(0, 0);
 });
