@@ -4,21 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
+    <title>MusicApp</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     
+    <!-- Contient le formulaire de recherche -->
     <header class="main-header">
         <div class="container">
+            <!-- Formulaire de recherche -->
             <form class="search-form" action="">
                 <div class="form-group">
                     <label for="search-input">Search</label>
+                    <!-- Input de la chaine de caractères à rechercher -->
                     <input type="text" id="search-input" class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="type-input">Filter</label>
+                    <!-- Select pour le type de recherche -->
                     <select id="type-input" class="form-input">
                         <option value="all">No filter</option>
                         <option value="recording">Title</option>
@@ -34,59 +38,76 @@
     </header>
     
     <section class="result-section">
+        <!-- Header de la liste (retourne un résultat d'erreur si la recherche n'est pas bonne, ou l'information de loading ou la disposition par défaut des items de la liste résultat) -->
         <header class="result-header">
             <div class="container"></div>
         </header>
+        <!-- Container de la liste résultat -->
         <div class="container" id="search-result">
         </div>
     </section>
 
+    <!-- Modale pour afficher les détails relatifs au titre -->
     <section class="modal">
         <div class="container modal-content">
+            <!-- Header de la modale, affiche le loading, le numéro du résultat et le bouton de fermeture de la modale -->
             <header class="modal-header">
                 <h2 class="modal-header-title"></h2>
                 <button class="close-btn btn-primary">&#215;</button>
             </header>
+            <!-- Contient les détails concernants le titre -->
             <div class="modal-body">
                 <ul class="modal-list">
                     <li class="modal-list-title">
                         <h3 class="modal-list-item-title">Title</h3>
+                        <!-- Contient le nom de la piste -->
                         <p></p>
                     </li>
                     <li class="modal-list-length">
                         <h3 class="modal-list-item-title">Length</h3>
+                        <!-- Contient la durée de la piste -->
                         <p></p>
                     </li>
                     <li class="modal-list-artist">
                         <h3 class="modal-list-item-title">Artist(s)</h3>
+                        <!-- Contient le ou les artistes associés -->
                         <p></p>
                     </li>
                     <li class="modal-list-rating">
                         <h3 class="modal-list-item-title">Rating</h3>
+                        <!-- Contient la note de la piste en pourcentage -->
                         <div></div>
                     </li>
                     <li class="modal-list-album">
                         <h3 class="modal-list-item-title">Album(s)</h3>
+                        <!-- Contient la liste d'albums associés à la piste -->
                         <ul class="album-list"></ul>
                     </li>
                     <li class="modal-list-genres">
                         <h3 class="modal-list-item-title">Genre(s)</h3>
+                        <!-- Contient la liste des genres associés à l'album principal -->
                         <p></p>
                     </li>
                 </ul>
             </div>
+            <!-- Contient les informations sur les pochettes d'album -->
             <footer class="modal-footer">
                 <h3 class="modal-footer-title">Cover art(s)</h3>
+                <!-- Contient les messages de loading, d'erreur ou de résultat nul-->
                 <p class="modal-footer-message"></p>
+                <!-- Contient les pochettes d'albums -->
                 <div class="cover-arts"></div>
             </footer>
         </div>
     </section>
     
-    
+    <!-- Le fichier js contenant les fonctions de requêtes xmlhttp -->
     <script src="js/request.js"></script>
+    <!-- Le fichier js contenant les fonctions de traitement des json reçus dans les requêtes et l'intégration des éléments dans le DOM -->
     <script src="js/dom.js"></script>
+    <!-- Le fichier js contenant les fonctions de créations des éléments html -->
     <script src="js/constructors.js"></script>
+    <!-- Le fichier js général contenant les déclarations de variables génrales et les triggers de recherche et de fermeture de la modale -->
     <script src="js/script.js"></script>
 </body>
 </html>
