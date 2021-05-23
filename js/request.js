@@ -65,6 +65,10 @@ function getGenres(albumId, callback) {
             }
         }
     });
+    //Interruption de la requête si on ferme la modale
+    closeModal.addEventListener('click', function() {
+        request.abort();
+    });
     request.send();
 }
 
@@ -88,6 +92,10 @@ function getRating(titleId, callback) {
                 modalRating.textContent = "Something went wrong";
             }
         }
+    });
+    //Interruption de la requête si on ferme la modale
+    closeModal.addEventListener('click', function() {
+        request.abort();
     });
     request.send();
 }
@@ -114,6 +122,10 @@ function getCoverArts(albumId, callback) {
                 modalFooterMessage.textContent = "Something went wrong";
             }
         }
+    });
+    //Interruption de la requête si on ferme la modale
+    closeModal.addEventListener('click', function() {
+        request.abort();
     });
     request.send();
 }
