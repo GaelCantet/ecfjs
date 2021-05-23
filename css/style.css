@@ -77,6 +77,11 @@ body {
     color: #fff;
 }
 
+.no-scroll {
+    height: 100%;
+    overflow: hidden;
+}
+
 /*COMPONENTS*/
 .btn-primary {
     padding: .5rem;

@@ -1,38 +1,44 @@
-//Constructeur de la liste Title
+/*=====CONSTRUCTION DES ELEMENTS DE LA LISTE RESULTAT DE RECHERCHE=====*/
 function constructTitleList(title, artist, album, nb, titleLength, albumId, titleId, genreId) {
+    //Création de la liste "Titre"
     let listItem = document.createElement('ul');
+    //Création de l'item title
     let listItemTitle = document.createElement('li');
     listItemTitle.textContent = title;
     listItemTitle.classList.add('result-list-title');
+    //Création de l'item artist
     let listItemArtist = document.createElement('li');
     listItemArtist.textContent = artist;
     listItemArtist.classList.add('result-list-artist');
+    //Création de l'item album
     let listItemAlbum = document.createElement('li');
-    if (typeof album == 'string') {
-        listItemAlbum.textContent = album;
-    } else {
-        listItemAlbum.textContent = album[0];
-    }
+    listItemAlbum.textContent = album[0];
     listItemAlbum.classList.add('result-list-album');
+    //Création de l'item numéro du résultat
     let listItemNumber = document.createElement('li');
     listItemNumber.classList.add('result-list-number');
+    //Création de l'item button
     let listItemBtn = document.createElement('li');
     listItemBtn.classList.add('result-list-button');
-    //Pour le header de la liste
+    //Si on créée le header de la liste
     if (nb === "#") {
         listItemNumber.textContent = nb;
         listItemBtn.textContent = titleLength.toString() + " entries";
-    } else {
+    } else { //Sinon
         listItemNumber.textContent = nb + 1;
+        //Création du bouton d'accès à la modale
         let listBtn = document.createElement('button');
         listBtn.textContent = "+";
         listBtn.classList.add('modal-btn', 'btn-primary');
+        //Si on clique sur le bouton on bloque le scroll su body et on ouvre la modale
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
+            document.body.classList.add('no-scroll');
             displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId);
         });
         listItemBtn.appendChild(listBtn);
     }
+    //On finalise la création de la liste et on retourne l'objet complet
     listItem.appendChild(listItemNumber);
     listItem.appendChild(listItemTitle);
     listItem.appendChild(listItemArtist);
@@ -42,25 +48,26 @@ function constructTitleList(title, artist, album, nb, titleLength, albumId, titl
     return listItem;
 }
 
-//Constructeur du dernier élément de la liste
+/*=====CONSTRUCTION DU DERNIER ELEMENT DE LA LISTE RESULTAT DE RECHERCHE=====*/
 function constructLastItem() {
+    //On créée la div qui se placera après le liste de résultats
     let lastItem = document.createElement('div');
     lastItem.setAttribute('id', 'last-item');
     return lastItem;
 }
 
-//Constructeur liste d'albums
-function constructAlbumlist(albumArray) {
-    for (i = 0; i < albumArray.length; i++) {
-        let albumListItem = document.createElement('li');
-        albumListItem.classList.add('album-list-item');
-        albumListItem.textContent = albumArray[i];
-        modalAlbum.appendChild(albumListItem);
-    }
+/*=====CONSTRUCTION D'UN ALBUM A AFFICHER DANS LA MODALE=====*/
+function constructAlbumlist(albumItem) {
+    //On créée un item de la liste album dans la modale
+    let albumListItem = document.createElement('li');
+    albumListItem.classList.add('album-list-item');
+    albumListItem.textContent = albumItem;
+    return albumListItem;
 }
 
-//Constructeur d'une image cover art
+/*=====CONSTRUCTION D'UNE POCHETTE A AFFICHER DANS LA MODALE=====*/
 function constructCoverArt(src) {
+    //On créée une img de la liste cover art de la modale
     let coverArt = document.createElement('img');
     coverArt.setAttribute('src', src);
     coverArt.setAttribute('alt', src);

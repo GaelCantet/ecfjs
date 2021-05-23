@@ -1,3 +1,18 @@
+//ITERATEURS
+let i;
+let j;
+
+//INITIALISATION VARIABLES
+let title;
+let titleId;
+let artist;
+let album;
+let albumId;
+let genreId;
+let titleLength;
+let count;
+let recordings;
+
 //SEARCH FORM
 const inputSearch = document.getElementById('search-input');
 const typeSearch = document.getElementById('type-input');
@@ -18,16 +33,20 @@ const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div'
 const modalFooterMessage = modal.querySelector('.modal-footer-message');
 const coverArtsContainer = modal.querySelector('.cover-arts');
 
+//EVENT AU CLICK SUR LA FERMETURE DE LA MODALE
 closeModal.addEventListener('click', function() {
+    document.body.classList.remove('no-scroll');
     //On fermeture de la modale
     modal.classList.remove('open-modal');
     //On supprime la liste d'albums
     modalAlbum.innerHTML = "";
     //On supprime les cover arts
     coverArtsContainer.innerHTML = "";
+    //On supprime le message du footer
+    modalFooterMessage.textContent = "";
 });
 
-
+//EVENT A LA VALIDATION DU FORMAULAIRE DE RECHERCHE
 document.querySelector('.search-form').addEventListener('submit', function(ev) {
     ev.preventDefault();
     //On vide la liste de résultats et son header

@@ -1,3 +1,4 @@
+/*=====REQUETE DE RECHERCHE PAR TERME(S)=====*/
 function getBySearch(type, term, callback, offset) {
     const request = new XMLHttpRequest();
     //URL de la requête
@@ -43,6 +44,7 @@ function getBySearch(type, term, callback, offset) {
     request.send();
 }
 
+/*=====REQUETE DES GENRES ASSOCIES A UN ID D'ALBUM=====*/
 function getGenres(albumId, callback) {
     const request = new XMLHttpRequest();
     //URL de la requête
@@ -66,6 +68,7 @@ function getGenres(albumId, callback) {
     request.send();
 }
 
+/*=====REQUETE DE NOTE ASSOCIEE A UN ID DE TITRE=====*/
 function getRating(titleId, callback) {
     const request = new XMLHttpRequest();
     //URL de la requête
@@ -89,6 +92,7 @@ function getRating(titleId, callback) {
     request.send();
 }
 
+/*=====REQUETE DES POCHETTES ASSOCIEES A UN ID D'ALBUM=====*/
 function getCoverArts(albumId, callback) {
     const request = new XMLHttpRequest();
     //URL de la requête
@@ -105,7 +109,7 @@ function getCoverArts(albumId, callback) {
                 response = response.images;
                 callback(response);
             } else if (request.status === 404) {
-                modalFooterMessage.textContent = "No cover art found for this album";
+                modalFooterMessage.textContent = "No cover art found";
             } else {
                 modalFooterMessage.textContent = "Something went wrong";
             }
