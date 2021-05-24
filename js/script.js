@@ -69,21 +69,9 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
 //EVENT D'APPARITION DU BOUTTON TO-TOP AU SCROLL
 window.addEventListener('scroll', function() {
     if (window.pageYOffset > 600) { //Si on scroll au délà de 600px du heut de page
-        //Le display de toTopBtn change en flex
-        // toTopBtn.style.display = "flex";
-        // //Son opacité change .3s après
-        // setTimeout(function() {
-        //     toTopBtn.style.opacity = 1;
-        // }, 300);
         toTopBtn.classList.remove('to-top-hide');
         toTopBtn.classList.add('to-top-show');
     } else { //Sinon
-        // //L'opacité de toTopBtn change
-        // toTopBtn.style.opacity = 0;
-        // //Son display passe à none .3s après
-        // setTimeout(function() {
-        //     toTopBtn.style.display = "none";
-        // }, 300);
         toTopBtn.classList.remove('to-top-show');
         toTopBtn.classList.add('to-top-hide');
     }

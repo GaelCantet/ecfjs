@@ -103,19 +103,21 @@ body {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    display: none;
     justify-content: center;
     align-items: center;
-    opacity: 0;
     background-color: var(--bgDark);
     transition: .3s;
 }
 
 .to-top-show {
+    display: flex;
+    opacity: 1;
     animation: toTopChange .3s normal forwards;
 }
 
 .to-top-hide {
+    display: none;
+    opacity: 0;
     animation: toTopChange .3s reverse forwards;
 }
 
