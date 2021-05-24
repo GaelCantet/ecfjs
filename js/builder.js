@@ -25,7 +25,8 @@ function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId,
         listItemNumber.textContent = nb;
         listItemBtn.textContent = titleLength.toString() + " entries";
     } else { //Sinon
-        listItemNumber.textContent = nb + 1;
+        nb++;
+        listItemNumber.textContent = nb;
         //Création du bouton d'accès à la modale
         let listBtn = document.createElement('button');
         listBtn.textContent = "+";

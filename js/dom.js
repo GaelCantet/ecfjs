@@ -22,7 +22,8 @@ function displayTitleList(response, type, term, offset) {
         let headerContent = buildTitleList("Title", "Artist", ["Album"], "#", count);
         resultHeader.appendChild(headerContent);
         //Pour chaque titre trouvé via la recherche
-        for (i = 0; i < recordings.length; i++) {
+        for (i in recordings) {
+            i = parseInt(i);
             //L'ID du titre
             titleId = recordings[i].id;
             if (recordings[i].hasOwnProperty('title')) {
@@ -52,7 +53,7 @@ function displayTitleList(response, type, term, offset) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
-            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId, genreId);
+            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -75,9 +76,7 @@ function displayTitleList(response, type, term, offset) {
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
-function displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId) {
-    //On incrémente le numéro du résultat de recherche avant d l'afficher
-    nb++;
+function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
     modalHeader.textContent = "#" + nb;
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
     modalTitle.textContent = title;
@@ -133,7 +132,7 @@ function displayGenres(genres) {
     if (genres.length === 0) {
         modalGenres.textContent = "No genre found for this album";
     } else { //Si la réponse retourne au moins un genre
-        for (i = 0; i < genres.length; i++) {
+        for (i in genres) {
             //On ne garde que les genres ayant un nombre positif de votes
             if (genres[i].count > 0) {
                 //On créée un tableau à deux dimensions de forme [nomDuGenre, nbDeVotes]
@@ -157,22 +156,22 @@ function displayGenres(genres) {
 }
 
 /*=====AFFICHER LES POCHETTES SI ELLES SONT DISPONIBLES=====*/
-function displayCoverArt(response) {
+function displayCoverArt(coverArtResponse) {
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
-    if (response.length < 1) {
+    if (coverArtResponse.length < 1) {
         modalFooterMessage.textContent = "No cover art found";
     } else { //Sinon
         modalFooterMessage.textContent = "";
         //Pour chaque image disponible
-        for (i = 0; i < response.length; i++) {
+        for (i in coverArtResponse) {
             let coverArt = "";
             //On cherche d'abord les plus petites
-            if(response[i].thumbnails.hasOwnProperty('250')) {
-                coverArt = response[i].thumbnails['250'];
-            } else if(response[i].thumbnails.hasOwnProperty('small')) {
-                coverArt = response[i].thumbnails['small'];
+            if(coverArtResponse[i].thumbnails.hasOwnProperty('250')) {
+                coverArt = coverArtResponse[i].thumbnails['250'];
+            } else if(coverArtResponse[i].thumbnails.hasOwnProperty('small')) {
+                coverArt = coverArtResponse[i].thumbnails['small'];
             } else { //Ou on prend l'image par défaut
-                coverArt = response[i].image;
+                coverArt = coverArtResponse[i].image;
             }
             //On construit l'élément image et ses attributs
             coverArt = buildCoverArt(coverArt);
