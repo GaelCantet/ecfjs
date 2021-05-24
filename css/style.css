@@ -218,7 +218,10 @@ ul.result-list-item {
     margin-top: 0;
     margin-bottom: 0;
     list-style: none;
+    transition: .1s;
 }
+
+
 
 #search-result ul.result-list-item:nth-of-type(1n) {
     background-color: #16445A;
@@ -226,6 +229,10 @@ ul.result-list-item {
 
 #search-result ul.result-list-item:nth-of-type(2n){
     background-color: #105070;
+}
+
+#search-result ul.result-list-item:hover {
+    background-color: var(--primary);
 }
 
 .result-list-item li {
@@ -526,15 +533,23 @@ ul.result-list-item {
 
 .cover-arts {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: 1fr;
     gap: 3rem;
 }
 
-.cover-art {
+.cover-art-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
+    height: 25rem;
+    border-radius: .4rem;
+    background-color: var(--bgDark);
+}
+
+.cover-art {
     object-fit: cover;
     object-position: center;
-    background-color: var(--bgDark);
 }
 
 @media screen and (min-width: 48em) {

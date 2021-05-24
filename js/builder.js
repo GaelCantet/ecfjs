@@ -67,11 +67,16 @@ function buildAlbumlist(albumItem) {
 }
 
 /*=====CONSTRUCTION D'UNE POCHETTE A AFFICHER DANS LA MODALE=====*/
-function buildCoverArt(src) {
-    //On créée une img de la liste cover art de la modale
-    let coverArt = document.createElement('img');
-    coverArt.setAttribute('src', src);
-    coverArt.setAttribute('alt', src);
-    coverArt.classList.add('cover-art', 'lozad');
-    return coverArt;
+function buildCoverArt(src, types) {
+    //On créée un container d'image de la liste cover art de la modale
+    let coverArtContainer = document.createElement('div');
+    coverArtContainer.classList.add('cover-art-container');
+    //On créée une img
+    let coverArtImg = document.createElement('img');
+    coverArtImg.setAttribute('src', src);
+    //On créée le alt de l'img
+    let altText = types.join(", ");
+    coverArtImg.setAttribute('alt', altText);
+    coverArtContainer.appendChild(coverArtImg);
+    return coverArtContainer;
 }

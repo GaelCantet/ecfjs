@@ -19,6 +19,7 @@ function getBySearch(type, term, callback, offset) {
             break;
     }
     searchUrl += "&limit=100&offset=" + offset + "&fmt=json";
+    console.log(searchUrl);
     request.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     request.addEventListener('loadstart', function() {

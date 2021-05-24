@@ -6,6 +6,7 @@ function displayTitleList(response, type, term, offset) {
     artist = "Unknow artist";
     album = ["Unknown album"];
     albumId = "";
+    genreId = "";
     titleLength = "Unknown length";
     count = response.count;
     recordings = response.recordings;
@@ -41,6 +42,7 @@ function displayTitleList(response, type, term, offset) {
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
                 albumId = [];
+                genreId = recordings[i].releases[0]["release-group"].id;
                 for (j = 0; j < recordings[i].releases.length; j++) {
                     //Tableau contenant les noms d'albums associés au titre
                     album.push(recordings[i].releases[j].title);
@@ -53,7 +55,7 @@ function displayTitleList(response, type, term, offset) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
-            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
+            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId, genreId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -76,7 +78,7 @@ function displayTitleList(response, type, term, offset) {
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
-function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
+function displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId) {
     modalHeader.textContent = "#" + nb;
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
     modalTitle.textContent = title;
@@ -91,7 +93,7 @@ function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
     //Si au moins un album est associé au titre
     if (albumId.length > 0) {
         //On requête les genres associés à l'album principal
-        getGenres(albumId[0], displayGenres);
+        getGenres(genreId, displayGenres);
         //On requête les pochettes associées aux albums
         albumId.map(function(albumIdItem) {
             getCoverArts(albumIdItem, displayCoverArt);
@@ -129,7 +131,7 @@ function displayGenres(genres) {
     let genreArrayTemp = [];
     let genreArrayFinal = [];
     //Si aucun genre n'est retourné
-    if (genres.length === 0) {
+    if (genres.length == 0) {
         modalGenres.textContent = "No genre found for this album";
     } else { //Si la réponse retourne au moins un genre
         for (i in genres) {
@@ -157,6 +159,7 @@ function displayGenres(genres) {
 
 /*=====AFFICHER LES POCHETTES SI ELLES SONT DISPONIBLES=====*/
 function displayCoverArt(coverArtResponse) {
+    console.log(coverArtResponse);
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (coverArtResponse.length < 1) {
         modalFooterMessage.textContent = "No cover art found";
@@ -164,6 +167,8 @@ function displayCoverArt(coverArtResponse) {
         modalFooterMessage.textContent = "";
         //Pour chaque image disponible
         for (i in coverArtResponse) {
+            //On récupère le(s) type(s) d'image pour en faire le alt de l'img
+            let altText = coverArtResponse[i].types;
             let coverArt = "";
             //On cherche d'abord les plus petites
             if(coverArtResponse[i].thumbnails.hasOwnProperty('250')) {
@@ -174,7 +179,7 @@ function displayCoverArt(coverArtResponse) {
                 coverArt = coverArtResponse[i].image;
             }
             //On construit l'élément image et ses attributs
-            coverArt = buildCoverArt(coverArt);
+            coverArt = buildCoverArt(coverArt, altText);
             //On affiche l'image dans le container
             coverArtsContainer.appendChild(coverArt);
         }
