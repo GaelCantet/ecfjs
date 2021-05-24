@@ -6,16 +6,16 @@ function getBySearch(type, term, callback, offset) {
     //Adaptation de la requête au type de recherche
     switch (type) {
         case 'artist':
-            searchUrl += 'artist:' + encodeURIComponent(term);
+            searchUrl += 'artist:' + term;
             break;
         case 'release':
-            searchUrl += 'release:' + encodeURIComponent(term);
+            searchUrl += 'release:' + term;
             break;
         case 'recording':
-            searchUrl += encodeURIComponent(term);
+            searchUrl += term;
             break;
         default:
-            searchUrl += "recording:" + encodeURIComponent(term) + "%20OR%20artist:" + encodeURIComponent(term) + "%20OR%20release:" + encodeURIComponent(term);
+            searchUrl += "recording:" + term + "%20OR%20artist:" + term + "%20OR%20release:" + term;
             break;
     }
     searchUrl += "&limit=100&offset=" + offset + "&fmt=json";
@@ -60,6 +60,8 @@ function getGenres(albumId, callback) {
                 let response = JSON.parse(request.responseText);
                 response = response.genres;
                 callback(response);
+            }  else if (request.status === 404) {
+                modalGenres.textContent = "No genre found for this album";
             } else {
                 modalGenres.textContent = "Something went wrong";
             }

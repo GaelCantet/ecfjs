@@ -60,6 +60,8 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
         resultHeader.textContent = "Your query is incorrect";
     } else { //Sinon on remplace les espaces de la chaine de caractères par des "+" pour optimiser la recherche et on lance la requête
         let term = inputSearch.value.split(" ").join("+");
+        //Puis on encode le résultat
+        term = encodeURIComponent(term);
         getBySearch(typeSearch.value, term, displayTitleList, 0);
     }
 });
@@ -68,18 +70,22 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
 window.addEventListener('scroll', function() {
     if (window.pageYOffset > 600) { //Si on scroll au délà de 600px du heut de page
         //Le display de toTopBtn change en flex
-        toTopBtn.style.display = "flex";
-        //Son opacité change .3s après
-        setTimeout(function() {
-            toTopBtn.style.opacity = 1;
-        }, 300);
+        // toTopBtn.style.display = "flex";
+        // //Son opacité change .3s après
+        // setTimeout(function() {
+        //     toTopBtn.style.opacity = 1;
+        // }, 300);
+        toTopBtn.classList.remove('to-top-hide');
+        toTopBtn.classList.add('to-top-show');
     } else { //Sinon
-        //L'opacité de toTopBtn change
-        toTopBtn.style.opacity = 0;
-        //Son display passe à none .3s après
-        setTimeout(function() {
-            toTopBtn.style.display = "none";
-        }, 300);
+        // //L'opacité de toTopBtn change
+        // toTopBtn.style.opacity = 0;
+        // //Son display passe à none .3s après
+        // setTimeout(function() {
+        //     toTopBtn.style.display = "none";
+        // }, 300);
+        toTopBtn.classList.remove('to-top-show');
+        toTopBtn.classList.add('to-top-hide');
     }
 });
 
@@ -87,3 +93,6 @@ window.addEventListener('scroll', function() {
 toTopBtn.addEventListener('click', function() {
     window.scrollTo(0, 0);
 });
+
+// const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+// observer.observe();

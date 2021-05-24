@@ -111,6 +111,20 @@ body {
     transition: .3s;
 }
 
+.to-top-show {
+    animation: toTopChange .3s normal forwards;
+}
+
+.to-top-hide {
+    animation: toTopChange .3s reverse forwards;
+}
+
+@keyframes toTopChange {
+    0% {display: none; opacity: 0;}
+    10% {display: flex; opacity: 0;}
+    100% {opacity: 1;}
+}
+
 /*SEARCH-FORM*/
 .main-header {
     padding-top: 4rem;
@@ -515,8 +529,10 @@ ul.result-list-item {
 }
 
 .cover-art {
+    width: 100%;
     object-fit: cover;
     object-position: center;
+    background-color: var(--bgDark);
 }
 
 @media screen and (min-width: 48em) {
