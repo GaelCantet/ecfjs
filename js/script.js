@@ -81,6 +81,3 @@ window.addEventListener('scroll', function() {
 toTopBtn.addEventListener('click', function() {
     window.scrollTo(0, 0);
 });
-
-// const observer = lozad(); // lazy loads elements with default selector as '.lozad'
-// observer.observe();

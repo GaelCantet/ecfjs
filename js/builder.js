@@ -74,7 +74,6 @@ function buildCoverArt(src, types) {
     //On créée une img
     let coverArtImg = document.createElement('img');
     coverArtImg.setAttribute('src', src);
-    //On créée le alt de l'img
     let altText = types.join(", ");
     coverArtImg.setAttribute('alt', altText);
     coverArtContainer.appendChild(coverArtImg);
