@@ -23,7 +23,6 @@ function displayTitleList(response, type, term, offset) {
         resultHeader.appendChild(headerContent);
         //Pour chaque titre trouvé via la recherche
         for (i in recordings) {
-            i = parseInt(i);
             //L'ID du titre
             titleId = recordings[i].id;
             if (recordings[i].hasOwnProperty('title')) {
@@ -53,6 +52,7 @@ function displayTitleList(response, type, term, offset) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
+            i = parseInt(i); //On s'assure que i est un entier pour l'additioner à l'offset
             let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
             //Intégration de la liste
             resultList.appendChild(listItem);
@@ -156,7 +156,6 @@ function displayGenres(response) {
 
 /*=====AFFICHER LES POCHETTES SI ELLES SONT DISPONIBLES=====*/
 function displayCoverArt(coverArtResponse) {
-    console.log(coverArtResponse);
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (coverArtResponse.length < 1) {
         modalFooterMessage.textContent = "No cover art found";

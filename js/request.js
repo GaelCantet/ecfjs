@@ -1,28 +1,19 @@
 /*=====REQUETE DE RECHERCHE PAR TERME(S)=====*/
 function getBySearch(type, term, callback, offset) {
-    const request = new XMLHttpRequest();
+    const searchRequest = new XMLHttpRequest();
     //URL de la requête
-    let searchUrl = "https://musicbrainz.org/ws/2/recording/?query=";
+    let searchUrl = "https://musicbrainz.org/ws/2/recording/?fmt=json&offset=" + offset + "&limit=100&query=";
     //Adaptation de la requête au type de recherche
-    switch (type) {
-        case 'artist':
-            searchUrl += 'artist:' + term;
-            break;
-        case 'release':
-            searchUrl += 'release:' + term;
-            break;
-        case 'recording':
-            searchUrl += term;
-            break;
-        default:
-            searchUrl += "recording:" + term + "%20OR%20artist:" + term + "%20OR%20release:" + term;
-            break;
+    if (type === 'all') {
+        searchUrl += term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
+    } else if(type === 'recording') {
+        searchUrl += term;
+    } else {
+        searchUrl += type + ':' + term;
     }
-    searchUrl += "&limit=100&offset=" + offset + "&fmt=json";
-    console.log(searchUrl);
-    request.open("GET", searchUrl, true);
+    searchRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
-    request.addEventListener('loadstart', function() {
+    searchRequest.addEventListener('loadstart', function() {
         if (offset > 0) {
             let loading = buildLastItem();
             loading.textContent = "Loading...";
@@ -31,34 +22,34 @@ function getBySearch(type, term, callback, offset) {
             resultHeader.textContent = "Loading...";
         }
     });
-    request.addEventListener("readystatechange", function () {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                let response = JSON.parse(request.responseText);
+    searchRequest.addEventListener("readystatechange", function () {
+        if (searchRequest.readyState === XMLHttpRequest.DONE) {
+            if (searchRequest.status === 200) {
+                let response = JSON.parse(searchRequest.responseText);
                 callback(response, type, term, offset);
             } else {
                 resultHeader.textContent = "Something went wrong, try again later";
             }
         }
     });
-    request.send();
+    searchRequest.send();
 }
 
 /*=====REQUETE DES GENRES & DE LA NOTE ASSOCIES A UN ID D'ALBUM=====*/
 function getGenresAndRating(titleId, firstCallback, secondCallback) {
-    const request = new XMLHttpRequest();
+    const genresRatingRequest = new XMLHttpRequest();
     //URL de la requête
     let searchUrl = "https://musicbrainz.org/ws/2/recording/" + encodeURIComponent(titleId) + "?inc=genres+ratings&fmt=json";
-    request.open("GET", searchUrl, true);
+    genresRatingRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
-    request.addEventListener('loadstart', function() {
+    genresRatingRequest.addEventListener('loadstart', function() {
         modalGenres.textContent = "Loading...";
         modalRating.textContent = "Loading...";
     });
-    request.addEventListener("readystatechange", function () {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                let response = JSON.parse(request.responseText);
+    genresRatingRequest.addEventListener("readystatechange", function () {
+        if (genresRatingRequest.readyState === XMLHttpRequest.DONE) {
+            if (genresRatingRequest.status === 200) {
+                let response = JSON.parse(genresRatingRequest.responseText);
                 firstCallback(response);
                 secondCallback(response);
             } else {
@@ -69,29 +60,28 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
     });
     //Interruption de la requête si on ferme la modale
     closeModal.addEventListener('click', function() {
-        request.abort();
+        genresRatingRequest.abort();
     });
-    request.send();
+    genresRatingRequest.send();
 }
 
 /*=====REQUETE DES POCHETTES ASSOCIEES A UN ID D'ALBUM=====*/
 function getCoverArts(albumId, callback) {
-    const request = new XMLHttpRequest();
+    const coverArtsRequest = new XMLHttpRequest();
     //URL de la requête
     let searchUrl = "https://coverartarchive.org/release/" + encodeURIComponent(albumId);
-    request.open("GET", searchUrl, true);
-    console.log(searchUrl);
+    coverArtsRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
-    request.addEventListener('loadstart', function() {
+    coverArtsRequest.addEventListener('loadstart', function() {
         modalFooterMessage.textContent = "Loading...";
     });
-    request.addEventListener("readystatechange", function () {
-        if (request.readyState === XMLHttpRequest.DONE) {
-            if (request.status === 200) {
-                let response = JSON.parse(request.responseText);
+    coverArtsRequest.addEventListener("readystatechange", function () {
+        if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
+            if (coverArtsRequest.status === 200) {
+                let response = JSON.parse(coverArtsRequest.responseText);
                 response = response.images;
                 callback(response);
-            } else if (request.status === 404) {
+            } else if (coverArtsRequest.status === 404) {
                 modalFooterMessage.textContent = "No cover art found";
             } else {
                 modalFooterMessage.textContent = "Something went wrong";
@@ -100,7 +90,7 @@ function getCoverArts(albumId, callback) {
     });
     //Interruption de la requête si on ferme la modale
     closeModal.addEventListener('click', function() {
-        request.abort();
+        coverArtsRequest.abort();
     });
-    request.send();
+    coverArtsRequest.send();
 }
