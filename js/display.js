@@ -6,7 +6,6 @@ function displayTitleList(response, type, term, offset) {
     artist = "Unknow artist";
     album = ["Unknown album"];
     albumId = "";
-    genreId = "";
     titleLength = "Unknown length";
     count = response.count;
     recordings = response.recordings;
@@ -42,7 +41,6 @@ function displayTitleList(response, type, term, offset) {
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
                 albumId = [];
-                genreId = recordings[i].releases[0]["release-group"].id;
                 for (j = 0; j < recordings[i].releases.length; j++) {
                     //Tableau contenant les noms d'albums associés au titre
                     album.push(recordings[i].releases[j].title);
@@ -55,7 +53,7 @@ function displayTitleList(response, type, term, offset) {
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
-            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId, genreId);
+            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -78,7 +76,7 @@ function displayTitleList(response, type, term, offset) {
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
-function displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId) {
+function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
     modalHeader.textContent = "#" + nb;
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
     modalTitle.textContent = title;
@@ -88,12 +86,9 @@ function displayModal(nb, title, artist, album, titleLength, albumId, titleId, g
     album.map(function(albumItem) {
         modalAlbum.appendChild(buildAlbumlist(albumItem));
     });
-    //On requête une note associée au titre
-    getRating(titleId, displayRating);
+    getGenresAndRating(titleId, displayGenres, displayRating);
     //Si au moins un album est associé au titre
     if (albumId.length > 0) {
-        //On requête les genres associés à l'album principal
-        getGenres(genreId, displayGenres);
         //On requête les pochettes associées aux albums
         albumId.map(function(albumIdItem) {
             getCoverArts(albumIdItem, displayCoverArt);
@@ -105,7 +100,8 @@ function displayModal(nb, title, artist, album, titleLength, albumId, titleId, g
 }
 
 /*=====AFFICHER LA NOTE SI ELLE EST DISPONIBLE=====*/
-function displayRating(ratings) {
+function displayRating(response) {
+    let ratings = response.rating;
     let rating = "";
     //Réinitialisation de bakground-size à 0
     modalRating.style.backgroundSize = 0;
@@ -126,13 +122,14 @@ function displayRating(ratings) {
 }
 
 /*=====AFFICHER LES GENRES S'ILS SONT DISPONIBLES=====*/
-function displayGenres(genres) {
+function displayGenres(response) {
+    let genres = response.genres;
     //Initialisation tableaux temporaire et final
     let genreArrayTemp = [];
     let genreArrayFinal = [];
     //Si aucun genre n'est retourné
     if (genres.length == 0) {
-        modalGenres.textContent = "No genre found for this album";
+        modalGenres.textContent = "No genre found for this title";
     } else { //Si la réponse retourne au moins un genre
         for (i in genres) {
             //On ne garde que les genres ayant un nombre positif de votes

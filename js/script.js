@@ -8,7 +8,6 @@ let titleId;
 let artist;
 let album;
 let albumId;
-let genreId;
 let titleLength;
 let count;
 let recordings;

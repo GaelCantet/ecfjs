@@ -1,5 +1,5 @@
 /*=====CONSTRUCTION DES ELEMENTS DE LA LISTE RESULTAT DE RECHERCHE=====*/
-function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId, genreId) {
+function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId) {
     //Création de la liste "Titre"
     let listItem = document.createElement('ul');
     //Création de l'item title
@@ -35,7 +35,7 @@ function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId,
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
             document.body.classList.add('no-scroll');
-            displayModal(nb, title, artist, album, titleLength, albumId, titleId, genreId);
+            displayModal(nb, title, artist, album, titleLength, albumId, titleId);
         });
         listItemBtn.appendChild(listBtn);
     }
