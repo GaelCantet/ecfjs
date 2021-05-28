@@ -5,12 +5,13 @@ function getBySearch(type, term, callback, offset) {
     let searchUrl = "https://musicbrainz.org/ws/2/recording/?fmt=json&offset=" + offset + "&limit=100&query=";
     //Adaptation de la requête au type de recherche
     if (type === 'all') {
-        searchUrl += term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
+        searchUrl += 'recording:' + term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
     } else if(type === 'recording') {
         searchUrl += term;
     } else {
         searchUrl += type + ':' + term;
     }
+    console.log(searchUrl);
     searchRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     searchRequest.addEventListener('loadstart', function() {

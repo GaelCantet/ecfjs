@@ -58,7 +58,8 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
     if (inputSearch.value === "" || !inputSearch.value.replace(/\s/g, '').length) {
         resultHeader.textContent = "Your query is incorrect";
     } else { //Sinon on remplace les espaces de la chaine de caractères par des "+" pour optimiser la recherche et on lance la requête
-        let term = inputSearch.value.split(" ").join("+");
+        let term = '("' + inputSearch.value + '" || (' + inputSearch.value.split(" ").join(" && ") + '))';
+        console.log(term);
         //Puis on encode le résultat
         term = encodeURIComponent(term);
         getBySearch(typeSearch.value, term, displayTitleList, 0);

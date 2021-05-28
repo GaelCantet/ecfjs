@@ -10,7 +10,7 @@ function displayTitleList(response, type, term, offset) {
     count = response.count;
     recordings = response.recordings;
     //S'il n'y a aucun résultat
-    if (count == 0) {
+    if (count === 0) {
         resultHeader.textContent = "No result";
     } else { //Sinon
         //Suppression last-item
