@@ -103,7 +103,7 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
     if (album[0][0] !== "Unknown album") {
         album.map(function(albumItem) {
             //On affiche les albums associés au titre
-            modalAlbum.appendChild(buildAlbumlist(albumItem[0]));
+            modalAlbum.appendChild(buildAlbumlist(albumItem[0], albumItem[2]));
             let coverArtTitle = buildCoverArtTitle(albumItem);
             coverArtsContainer.appendChild(coverArtTitle[0]).insertAdjacentElement("afterend", coverArtTitle[1]);
             //On requête les pochettes associées aux albums
@@ -175,9 +175,9 @@ function displayGenres(response) {
 function displayCoverArt(coverArtResponse, albumId) {
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (coverArtResponse.length < 1) {
-        modalFooterMessage.textContent = "No cover art found";
+        document.getElementById(albumId).textContent = "No cover art found";
     } else { //Sinon
-        modalFooterMessage.textContent = "";
+        document.getElementById(albumId).textContent = "";
         //Pour chaque image disponible
         for (i in coverArtResponse) {
             //On récupère le(s) type(s) d'image pour en faire le alt de l'img

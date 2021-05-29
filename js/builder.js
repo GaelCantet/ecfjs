@@ -58,10 +58,11 @@ function buildLastItem() {
 }
 
 /*=====CONSTRUCTION D'UN ALBUM A AFFICHER DANS LA MODALE=====*/
-function buildAlbumlist(albumItem) {
+function buildAlbumlist(albumItem, albumDescription) {
     //On créée un item de la liste album dans la modale
     let albumListItem = document.createElement('li');
     albumListItem.classList.add('album-list-item');
+    albumListItem.setAttribute('title', albumDescription);
     albumListItem.textContent = albumItem;
     return albumListItem;
 }
