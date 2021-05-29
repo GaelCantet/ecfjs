@@ -74,7 +74,7 @@ function getCoverArts(albumId, callback) {
     coverArtsRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     coverArtsRequest.addEventListener('loadstart', function() {
-        document.getElementById(albumId).textContent = "Loading...";
+        document.getElementById(albumId).textContent = "↳ Loading...";
     });
     coverArtsRequest.addEventListener("readystatechange", function () {
         if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
@@ -83,9 +83,9 @@ function getCoverArts(albumId, callback) {
                 response = response.images;
                 callback(response, albumId);
             } else if (coverArtsRequest.status === 404) {
-                document.getElementById(albumId).textContent = "No cover art found";
+                document.getElementById(albumId).textContent = "↳ No cover art found";
             } else {
-                document.getElementById(albumId).textContent = "Something went wrong";
+                document.getElementById(albumId).textContent = "↳ Something went wrong";
             }
         }
     });

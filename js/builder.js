@@ -69,7 +69,7 @@ function buildAlbumlist(albumItem, albumDescription) {
 
 function buildCoverArtTitle(albumItem) {
     let coverArtTitle =  document.createElement('h4');
-    coverArtTitle.classList.add('cover-art-title');
+    coverArtTitle.classList.add('cover-art-title', 'album-list-item');
     coverArtTitle.textContent = albumItem[0];
     let coverArtDescrpition = document.createElement('span');
     coverArtDescrpition.textContent = ' (' + albumItem[2] + ')';

@@ -534,7 +534,7 @@ ul.result-list-item {
 .cover-art-title {
     margin-top: 3rem;
     margin-bottom: 1.5rem;
-    width: 100;
+    max-width: max-content;
     font-weight: normal;
 }
 
