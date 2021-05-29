@@ -7,6 +7,7 @@ let title;
 let titleId;
 let artist;
 let album;
+let albumDescription;
 let albumId;
 let titleLength;
 let count;

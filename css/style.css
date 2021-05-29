@@ -531,10 +531,24 @@ ul.result-list-item {
     font-weight: normal;
 }
 
-.cover-arts {
+.cover-art-title {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    width: 100;
+    font-weight: normal;
+}
+
+.cover-art-title > span {
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.cover-art-title + div {
+    grid-column: 1/-1;
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
+
 }
 
 .cover-art-container {
@@ -553,13 +567,13 @@ ul.result-list-item {
 }
 
 @media screen and (min-width: 48em) {
-    .cover-arts {
+    .cover-art-title + div {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media screen and (min-width: 62em) {
-    .cover-arts {
+    .cover-art-title + div {
         grid-template-columns: repeat(4, 1fr);
     }
 }

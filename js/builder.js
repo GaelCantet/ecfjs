@@ -1,5 +1,5 @@
 /*=====CONSTRUCTION DES ELEMENTS DE LA LISTE RESULTAT DE RECHERCHE=====*/
-function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId) {
+function buildTitleList(title, artist, album, nb, titleLength, titleId) {
     //Création de la liste "Titre"
     let listItem = document.createElement('ul');
     //Création de l'item title
@@ -12,7 +12,7 @@ function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId)
     listItemArtist.classList.add('result-list-artist');
     //Création de l'item album
     let listItemAlbum = document.createElement('li');
-    listItemAlbum.textContent = album[0];
+    listItemAlbum.textContent = album[0][0];
     listItemAlbum.classList.add('result-list-album');
     //Création de l'item numéro du résultat
     let listItemNumber = document.createElement('li');
@@ -35,7 +35,7 @@ function buildTitleList(title, artist, album, nb, titleLength, albumId, titleId)
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
             document.body.classList.add('no-scroll');
-            displayModal(nb, title, artist, album, titleLength, albumId, titleId);
+            displayModal(nb, title, artist, album, titleLength, titleId);
         });
         listItemBtn.appendChild(listBtn);
     }
@@ -64,6 +64,18 @@ function buildAlbumlist(albumItem) {
     albumListItem.classList.add('album-list-item');
     albumListItem.textContent = albumItem;
     return albumListItem;
+}
+
+function buildCoverArtTitle(albumItem) {
+    let coverArtTitle =  document.createElement('h4');
+    coverArtTitle.classList.add('cover-art-title');
+    coverArtTitle.textContent = albumItem[0];
+    let coverArtDescrpition = document.createElement('span');
+    coverArtDescrpition.textContent = ' (' + albumItem[2] + ')';
+    coverArtTitle.appendChild(coverArtDescrpition);
+    let coverArtContainer = document.createElement('div');
+    coverArtContainer.setAttribute('id', albumItem[1]);
+    return [coverArtTitle, coverArtContainer];
 }
 
 /*=====CONSTRUCTION D'UNE POCHETTE A AFFICHER DANS LA MODALE=====*/

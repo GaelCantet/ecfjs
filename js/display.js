@@ -17,10 +17,12 @@ function displayTitleList(response, type, term, offset) {
         if (document.getElementById('last-item') !== null) {
             document.getElementById('last-item').remove();
         }
-        //Gestion header
-        resultHeader.innerHTML = "";
-        let headerContent = buildTitleList("Title", "Artist", ["Album"], "#", count);
-        resultHeader.appendChild(headerContent);
+        //Si le offset = 0, on affiche le header
+        if (offset === 0) {
+            resultHeader.innerHTML = "";
+            let headerContent = buildTitleList("Title", "Artist", [["Album", ""]], "#", count);
+            resultHeader.appendChild(headerContent);
+        }
         //Pour chaque titre trouvé via la recherche
         for (i in recordings) {
             //L'ID du titre
@@ -40,11 +42,25 @@ function displayTitleList(response, type, term, offset) {
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
                 albumId = [];
+                //Pour chaque album associé au titre
                 for (j = 0; j < recordings[i].releases.length; j++) {
-                    //Tableau contenant les noms d'albums associés au titre
-                    album.push(recordings[i].releases[j].title);
-                    //Tableau contenant les id associés aux albums
-                    albumId.push(recordings[i].releases[j].id);
+                    if (recordings[i].releases[j].hasOwnProperty('date') && recordings[i].releases[j].hasOwnProperty('country')) {//Si on connait la date et le pays de l'album
+                        albumDescription = [
+                            recordings[i].releases[j].status,//Le statut de l'album
+                            recordings[i].releases[j].date,//La date de sortie de l'album
+                            recordings[i].releases[j].country//Le pays de sortie de l'album
+                        ];
+                        //On transforme la descrition en chaine de caractères
+                        albumDescription = albumDescription.join(", ");
+                    } else {//Sinon
+                        albumDescription = recordings[i].releases[j].status;
+                    }
+                    //Tableau contenant les noms d'albums et leur id associés au titre
+                    album.push([
+                        recordings[i].releases[j].title,//Le nom de l'album
+                        recordings[i].releases[j].id,//L'id de l'album
+                        albumDescription//La description de l'album
+                    ]);
                 }
             }
             if (recordings[i].hasOwnProperty('length')) {
@@ -53,7 +69,7 @@ function displayTitleList(response, type, term, offset) {
             }
             //Construction de la liste du titre
             i = parseInt(i); //On s'assure que i est un entier pour l'additioner à l'offset
-            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, albumId, titleId);
+            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, titleId);
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
@@ -76,24 +92,25 @@ function displayTitleList(response, type, term, offset) {
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
-function displayModal(nb, title, artist, album, titleLength, albumId, titleId) {
+function displayModal(nb, title, artist, album, titleLength, titleId) {
     modalHeader.textContent = "#" + nb;
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
-    //On affiche les albums associés au titre
-    album.map(function(albumItem) {
-        modalAlbum.appendChild(buildAlbumlist(albumItem));
-    });
     getGenresAndRating(titleId, displayGenres, displayRating);
     //Si au moins un album est associé au titre
-    if (albumId.length > 0) {
-        //On requête les pochettes associées aux albums
-        albumId.map(function(albumIdItem) {
-            getCoverArts(albumIdItem, displayCoverArt);
+    if (album[0][0] !== "Unknown album") {
+        album.map(function(albumItem) {
+            //On affiche les albums associés au titre
+            modalAlbum.appendChild(buildAlbumlist(albumItem[0]));
+            let coverArtTitle = buildCoverArtTitle(albumItem);
+            coverArtsContainer.appendChild(coverArtTitle[0]).insertAdjacentElement("afterend", coverArtTitle[1]);
+            //On requête les pochettes associées aux albums
+            getCoverArts(albumItem[1], displayCoverArt);
         });
     } else { //Si aucun album n'est associé au titre
+        modalAlbum.appendChild(buildAlbumlist(album[0][0]));//Affiche "Unknown album"
         modalFooterMessage.textContent = "No album available for this title";
         modalGenres.textContent = "No genre can be found";
     }
@@ -155,7 +172,7 @@ function displayGenres(response) {
 }
 
 /*=====AFFICHER LES POCHETTES SI ELLES SONT DISPONIBLES=====*/
-function displayCoverArt(coverArtResponse) {
+function displayCoverArt(coverArtResponse, albumId) {
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (coverArtResponse.length < 1) {
         modalFooterMessage.textContent = "No cover art found";
@@ -177,7 +194,7 @@ function displayCoverArt(coverArtResponse) {
             //On construit l'élément image et ses attributs
             coverArt = buildCoverArt(coverArt, altText);
             //On affiche l'image dans le container
-            coverArtsContainer.appendChild(coverArt);
+            document.getElementById(albumId).appendChild(coverArt);
         }
     }
 }

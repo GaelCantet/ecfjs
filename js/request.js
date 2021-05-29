@@ -81,7 +81,7 @@ function getCoverArts(albumId, callback) {
             if (coverArtsRequest.status === 200) {
                 let response = JSON.parse(coverArtsRequest.responseText);
                 response = response.images;
-                callback(response);
+                callback(response, albumId);
             } else if (coverArtsRequest.status === 404) {
                 modalFooterMessage.textContent = "No cover art found";
             } else {
