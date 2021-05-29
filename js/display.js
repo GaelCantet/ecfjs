@@ -5,7 +5,6 @@ function displayTitleList(response, type, term, offset) {
     titleId = "";
     artist = "Unknow artist";
     album = ["Unknown album"];
-    albumId = "";
     titleLength = "Unknown length";
     count = response.count;
     recordings = response.recordings;
@@ -13,7 +12,7 @@ function displayTitleList(response, type, term, offset) {
     if (count === 0) {
         resultHeader.textContent = "No result";
     } else { //Sinon
-        //Suppression last-item
+        //Suppression last-item si il existe
         if (document.getElementById('last-item') !== null) {
             document.getElementById('last-item').remove();
         }
@@ -55,7 +54,7 @@ function displayTitleList(response, type, term, offset) {
                     } else {//Sinon
                         albumDescription = recordings[i].releases[j].status;
                     }
-                    //Tableau contenant les noms d'albums et leur id associés au titre
+                    //Tableau contenant les noms d'albums, leur id et leur description
                     album.push([
                         recordings[i].releases[j].title,//Le nom de l'album
                         recordings[i].releases[j].id,//L'id de l'album
@@ -98,22 +97,19 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
+    //On requête le(s) genre(s) et la note du titre
     getGenresAndRating(titleId, displayGenres, displayRating);
     //Si au moins un album est associé au titre
     if (album[0][0] !== "Unknown album") {
         album.map(function(albumItem) {
-            //On affiche les albums associés au titre
-            modalAlbum.appendChild(buildAlbumlist(albumItem[0], albumItem[2]));
-            //On affiche les containers des pochettes
-            let coverArtTitle = buildCoverArtTitle(albumItem);
+            //On affiche les albums associés au titre et les containers des pochettes
+            let coverArtTitle = buildAlbumlist(albumItem);
             coverArtsContainer.appendChild(coverArtTitle[0]).insertAdjacentElement("afterend", coverArtTitle[1]);
             //On requête les pochettes associées aux albums
             getCoverArts(albumItem[1], displayCoverArt);
         });
     } else { //Si aucun album n'est associé au titre
         modalAlbum.appendChild(buildAlbumlist(album[0][0]));//Affiche "Unknown album"
-        modalFooterMessage.textContent = "No album available for this title";
-        modalGenres.textContent = "No genre can be found";
     }
 }
 

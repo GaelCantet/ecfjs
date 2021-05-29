@@ -11,7 +11,6 @@ function getBySearch(type, term, callback, offset) {
     } else {
         searchUrl += type + ':' + term;
     }
-    console.log(searchUrl);
     searchRequest.open("GET", searchUrl, true);
     //Affichage LOADING pendant le chargement de la requête
     searchRequest.addEventListener('loadstart', function() {
@@ -83,7 +82,7 @@ function getCoverArts(albumId, callback) {
                 response = response.images;
                 callback(response, albumId);
             } else if (coverArtsRequest.status === 404) {
-                document.getElementById(albumId).textContent = "↳ No cover art found";
+                document.getElementById(albumId).textContent = "↳ No cover art available";
             } else {
                 document.getElementById(albumId).textContent = "↳ Something went wrong";
             }

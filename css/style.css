@@ -479,24 +479,11 @@ ul.result-list-item {
     background-repeat: no-repeat;
     text-align: center;
     font-size: 1.8rem;
+    transition: .3s;
 }
 
-.modal-list-genres,
-.modal-list-album p {
+.modal-list-genres{
     font-size: 1.8rem;
-}
-
-.album-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.album-list-item {
-    margin-right: .5rem;
-    margin-bottom: .5rem;
-    padding: .5rem;
-    background-color: var(--primary);
-    border-radius: .4rem;
 }
 
 @media screen and (min-width: 48em){
@@ -504,9 +491,12 @@ ul.result-list-item {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .modal-list-rating,
-    .modal-list-album {
-        grid-column: 1/-1;
+    .modal-list-rating {
+        grid-column: 1/2;
+    }
+
+    .modal-list-genres{
+        grid-column: 2/-1;
     }
 }
 
@@ -524,6 +514,7 @@ ul.result-list-item {
 .modal-footer {
     margin-top: 3rem;
     margin-bottom: 3rem;
+    padding: 1rem;
 }
 
 .modal-footer-title {
@@ -532,9 +523,11 @@ ul.result-list-item {
 }
 
 .cover-art-title {
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
+    margin: 3rem .5rem  1.5rem 0;
+    padding: .5rem;
     max-width: max-content;
+    background-color: var(--primary);
+    border-radius: .4rem;
     font-weight: normal;
 }
 

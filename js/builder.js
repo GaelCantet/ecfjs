@@ -31,7 +31,7 @@ function buildTitleList(title, artist, album, nb, titleLength, titleId) {
         let listBtn = document.createElement('button');
         listBtn.textContent = "+";
         listBtn.classList.add('modal-btn', 'btn-primary');
-        //Si on clique sur le bouton on bloque le scroll su body et on ouvre la modale
+        //Si on clique sur le bouton on bloque le scroll du body et on ouvre la modale
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
             document.body.classList.add('no-scroll');
@@ -58,25 +58,19 @@ function buildLastItem() {
 }
 
 /*=====CONSTRUCTION D'UN ALBUM A AFFICHER DANS LA MODALE=====*/
-function buildAlbumlist(albumItem, albumDescription) {
-    //On créée un item de la liste album dans la modale
-    let albumListItem = document.createElement('li');
-    albumListItem.classList.add('album-list-item');
-    albumListItem.setAttribute('title', albumDescription);
-    albumListItem.textContent = albumItem;
-    return albumListItem;
-}
-
-function buildCoverArtTitle(albumItem) {
-    let coverArtTitle =  document.createElement('h4');
-    coverArtTitle.classList.add('cover-art-title', 'album-list-item');
-    coverArtTitle.textContent = albumItem[0];
-    let coverArtDescrpition = document.createElement('span');
-    coverArtDescrpition.textContent = ' (' + albumItem[2] + ')';
-    coverArtTitle.appendChild(coverArtDescrpition);
-    let coverArtContainer = document.createElement('div');
-    coverArtContainer.setAttribute('id', albumItem[1]);
-    return [coverArtTitle, coverArtContainer];
+function buildAlbumlist(albumItem) {
+    //On crée le titre de l'album
+    let albumTitle =  document.createElement('h4');
+    albumTitle.classList.add('cover-art-title');
+    albumTitle.textContent = albumItem[0];
+    //On crée la description de l'album
+    let albumDescription = document.createElement('span');
+    albumDescription.textContent = ' (' + albumItem[2] + ')';
+    albumTitle.appendChild(albumDescription);
+    //On crée le container de ses pochettes
+    let coverArtsContainer = document.createElement('div');
+    coverArtsContainer.setAttribute('id', albumItem[1]);
+    return [albumTitle, coverArtsContainer];
 }
 
 /*=====CONSTRUCTION D'UNE POCHETTE A AFFICHER DANS LA MODALE=====*/
@@ -87,8 +81,8 @@ function buildCoverArt(src, types) {
     //On créée une img
     let coverArtImg = document.createElement('img');
     coverArtImg.setAttribute('src', src);
-    let altText = types.join(", ");
-    coverArtImg.setAttribute('alt', altText);
+    let coverArtText = types.join(", ");
+    coverArtImg.setAttribute('alt', coverArtText);
     coverArtContainer.appendChild(coverArtImg);
     return coverArtContainer;
 }
