@@ -479,7 +479,7 @@ ul.result-list-item {
     background-repeat: no-repeat;
     text-align: center;
     font-size: 1.8rem;
-    transition: .3s;
+    transition: background-size .5s ease-out .5s;
 }
 
 .modal-list-genres{
@@ -522,6 +522,7 @@ ul.result-list-item {
     font-weight: normal;
 }
 
+/*ALBUMS*/
 .album-title {
     margin: 3rem .5rem  1.5rem 0;
     padding: .5rem;
@@ -532,18 +533,30 @@ ul.result-list-item {
 }
 
 .album-description {
+    margin-left: .5rem;
     font-size: 1.2rem;
     font-style: italic;
 }
 
 .album-arts-container {
-    grid-column: 1/-1;
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
-
 }
 
+@media screen and (min-width: 48em) {
+    .album-arts-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 62em) {
+    .album-arts-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/*COVER ARTS*/
 .cover-art-container {
     display: flex;
     justify-content: center;
@@ -557,16 +570,4 @@ ul.result-list-item {
 .cover-art {
     object-fit: cover;
     object-position: center;
-}
-
-@media screen and (min-width: 48em) {
-    .album-arts-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media screen and (min-width: 62em) {
-    .album-arts-container {
-        grid-template-columns: repeat(4, 1fr);
-    }
 }

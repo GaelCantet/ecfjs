@@ -1,6 +1,6 @@
 /*=====REQUETE DE RECHERCHE PAR TERME(S)=====*/
 function getBySearch(type, term, callback, offset) {
-    const searchRequest = new XMLHttpRequest();
+    let searchRequest = new XMLHttpRequest();
     //URL de la requête
     let searchUrl = "https://musicbrainz.org/ws/2/recording/?fmt=json&offset=" + offset + "&limit=100&query=";
     //Adaptation de la requête au type de recherche
@@ -66,31 +66,36 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
 }
 
 /*=====REQUETE DES POCHETTES ASSOCIEES A UN ID D'ALBUM=====*/
-function getCoverArts(albumId, callback) {
-    const coverArtsRequest = new XMLHttpRequest();
-    //URL de la requête
-    let searchUrl = "https://coverartarchive.org/release/" + encodeURIComponent(albumId);
-    coverArtsRequest.open("GET", searchUrl, true);
-    //Affichage LOADING pendant le chargement de la requête
-    coverArtsRequest.addEventListener('loadstart', function() {
-        document.getElementById(albumId).textContent = "↳ Loading...";
-    });
-    coverArtsRequest.addEventListener("readystatechange", function () {
-        if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
-            if (coverArtsRequest.status === 200) {
-                let response = JSON.parse(coverArtsRequest.responseText);
-                response = response.images;
-                callback(response, albumId);
-            } else if (coverArtsRequest.status === 404) {
-                document.getElementById(albumId).textContent = "↳ No cover art available";
-            } else {
-                document.getElementById(albumId).textContent = "↳ Something went wrong";
+function getCoverArts(albumArray, index, callback) {
+    if (index < albumArray.length) {//S'il reste des des items à traiter dans le tableau
+        const coverArtsRequest = new XMLHttpRequest();
+        //URL de la requête
+        let searchUrl = "https://coverartarchive.org/release/" + encodeURIComponent(albumArray[index][1]);
+        coverArtsRequest.open("GET", searchUrl, true);
+        //Affichage LOADING pendant le chargement de la requête
+        coverArtsRequest.addEventListener('loadstart', function() {
+            document.getElementById(albumArray[index][1]).textContent = "↳ Loading...";
+        });
+        coverArtsRequest.addEventListener("readystatechange", function () {
+            if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
+                if (coverArtsRequest.status === 200) {
+                    let response = JSON.parse(coverArtsRequest.responseText);
+                    response = response.images;
+                    callback(response, albumArray[index][1]);
+                } else if (coverArtsRequest.status === 404 && document.getElementById(albumArray[index][1]) !== null) {//Si la réponse n'est pas valide et que les containers des messages sont bien créés
+                    document.getElementById(albumArray[index][1]).textContent = "↳ No cover art available";
+                } else if(document.getElementById(albumArray[index][1]) !== null) {
+                    document.getElementById(albumArray[index][1]).textContent = "↳ Something went wrong";
+                }
+                //On attend que la requête d'une pochette soit terminée pour lancer la suivante
+                index++;
+                getCoverArts(albumArray, index, displayCoverArt);
             }
-        }
-    });
-    //Interruption de la requête si on ferme la modale
-    closeModal.addEventListener('click', function() {
-        coverArtsRequest.abort();
-    });
-    coverArtsRequest.send();
+        });
+        //Interruption de la requête si on ferme la modale
+        closeModal.addEventListener('click', function() {
+            coverArtsRequest.abort();
+        });
+        coverArtsRequest.send();
+    }
 }

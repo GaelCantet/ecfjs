@@ -1,6 +1,7 @@
 //ITERATEURS
 let i;
 let j;
+let k;
 
 //INITIALISATION VARIABLES
 let title;
@@ -31,7 +32,6 @@ const modalTitle = modalBody.querySelector('.modal-list .modal-list-title p');
 const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-length p');
 const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
-const modalAlbum = modalBody.querySelector('.modal-list .album-list');
 const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div');
 const albumsContainer = modal.querySelector('.albums-container');
 
@@ -42,6 +42,8 @@ closeModal.addEventListener('click', function() {
     modal.classList.remove('open-modal');
     //On supprime la liste d'albums
     albumsContainer.innerHTML = "";
+    //On remet le background-size du rating à 0
+    modalRating.style.backgroundSize = 0;
 });
 
 //EVENT A LA VALIDATION DU FORMAULAIRE DE RECHERCHE
@@ -55,7 +57,6 @@ document.querySelector('.search-form').addEventListener('submit', function(ev) {
         resultHeader.textContent = "Your query is incorrect";
     } else { //On traite l'input.value sous la forme: ("chaine de caractères" || (chaine && de && caractères))
         let term = '("' + inputSearch.value + '" || (' + inputSearch.value.split(" ").join(" && ") + '))';
-        console.log(term);
         //Puis on encode le résultat et on appelle la requête
         term = encodeURIComponent(term);
         getBySearch(typeSearch.value, term, displayTitleList, 0);

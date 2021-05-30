@@ -5,6 +5,7 @@ function displayTitleList(response, type, term, offset) {
     titleId = "";
     artist = "Unknow artist";
     album = ["Unknown album"];
+    albumDescription = "No details available";
     titleLength = "Unknown length";
     count = response.count;
     recordings = response.recordings;
@@ -30,6 +31,10 @@ function displayTitleList(response, type, term, offset) {
                 //Le nom du titre
                 title = recordings[i].title;
             }
+            if (recordings[i].hasOwnProperty('length')) {
+                //La longueur du titre convertie au format HH:MM:SS
+                titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
+            }
             if (recordings[i].hasOwnProperty('artist-credit')) {
                 //Le(s) nom(s) de(s) l'artiste(s)
                 artist = [];
@@ -41,30 +46,31 @@ function displayTitleList(response, type, term, offset) {
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
                 albumId = [];
+                albumDescription = [];
                 //Pour chaque album associé au titre
                 for (j = 0; j < recordings[i].releases.length; j++) {
-                    if (recordings[i].releases[j].hasOwnProperty('date') && recordings[i].releases[j].hasOwnProperty('country')) {//Si on connait la date et le pays de l'album
-                        albumDescription = [
-                            recordings[i].releases[j].status,//Le statut de l'album
-                            recordings[i].releases[j].date,//La date de sortie de l'album
-                            recordings[i].releases[j].country//Le pays de sortie de l'album
-                        ];
-                        //On transforme la descrition en chaine de caractères
-                        albumDescription = albumDescription.join(", ");
-                    } else {//Sinon
-                        albumDescription = recordings[i].releases[j].status;
+                    if (recordings[i].releases[j].hasOwnProperty('media')) {
+                        albumDescription.push(recordings[i].releases[j].media[0].format);
                     }
+                    if (recordings[i].releases[j].hasOwnProperty('status')) {
+                        albumDescription.push(recordings[i].releases[j].status);
+                    }
+                    if (recordings[i].releases[j].hasOwnProperty('date')) {
+                        albumDescription.push(recordings[i].releases[j].date);
+                    }
+                    if (recordings[i].releases[j].hasOwnProperty('country')) {
+                        albumDescription.push(recordings[i].releases[j].country);
+                    }
+                    //On transforme la descrition en chaine de caractères
+                    albumDescription = albumDescription.join(", ");
                     //Tableau contenant les noms d'albums, leur id et leur description
                     album.push([
                         recordings[i].releases[j].title,//Le nom de l'album
                         recordings[i].releases[j].id,//L'id de l'album
                         albumDescription//La description de l'album
                     ]);
+                    albumDescription = [];
                 }
-            }
-            if (recordings[i].hasOwnProperty('length')) {
-                //La longueur du titre convertie au format HH:MM:SS
-                titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
             //Construction de la liste du titre
             i = parseInt(i); //On s'assure que i est un entier pour l'additioner à l'offset
@@ -72,6 +78,7 @@ function displayTitleList(response, type, term, offset) {
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
+        
         //Incrémentation de l'offset pour préparer la suite de la liste
         offset += 100;
         //Si il reste des éléments dans la recherche, on affiche un bouton pour charger la suite
@@ -87,7 +94,7 @@ function displayTitleList(response, type, term, offset) {
             lastItem.appendChild(getMoreBtn);
             resultList.appendChild(lastItem);
         }
-    } 
+    }
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
@@ -105,11 +112,11 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
             //On affiche les albums associés au titre et les containers des pochettes
             let albumListItem = buildAlbumlist(albumItem);
             albumsContainer.appendChild(albumListItem[0]).insertAdjacentElement("afterend", albumListItem[1]);
-            //On requête les pochettes associées aux albums
-            getCoverArts(albumItem[1], displayCoverArt);
         });
+        //On requête la pochette du 1er album (la fonction boucle pour afficher les autres)
+        getCoverArts(album, 0, displayCoverArt);
     } else { //Si aucun album n'est associé au titre
-        modalAlbum.appendChild(buildAlbumlist(album[0][0]));//Affiche "Unknown album"
+        albumsContainer.appendChild(buildAlbumlist(album[0][0]));//Affiche "Unknown album"
     }
 }
 
