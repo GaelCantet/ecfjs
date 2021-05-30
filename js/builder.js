@@ -61,16 +61,18 @@ function buildLastItem() {
 function buildAlbumlist(albumItem) {
     //On crée le titre de l'album
     let albumTitle =  document.createElement('h4');
-    albumTitle.classList.add('cover-art-title');
+    albumTitle.classList.add('album-title');
     albumTitle.textContent = albumItem[0];
     //On crée la description de l'album
     let albumDescription = document.createElement('span');
+    albumDescription.classList.add('album-description');
     albumDescription.textContent = ' (' + albumItem[2] + ')';
     albumTitle.appendChild(albumDescription);
     //On crée le container de ses pochettes
-    let coverArtsContainer = document.createElement('div');
-    coverArtsContainer.setAttribute('id', albumItem[1]);
-    return [albumTitle, coverArtsContainer];
+    let albumArtsContainer = document.createElement('div');
+    albumArtsContainer.classList.add('album-arts-container');
+    albumArtsContainer.setAttribute('id', albumItem[1]);
+    return [albumTitle, albumArtsContainer];
 }
 
 /*=====CONSTRUCTION D'UNE POCHETTE A AFFICHER DANS LA MODALE=====*/

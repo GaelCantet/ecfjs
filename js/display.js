@@ -103,8 +103,8 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
     if (album[0][0] !== "Unknown album") {
         album.map(function(albumItem) {
             //On affiche les albums associés au titre et les containers des pochettes
-            let coverArtTitle = buildAlbumlist(albumItem);
-            coverArtsContainer.appendChild(coverArtTitle[0]).insertAdjacentElement("afterend", coverArtTitle[1]);
+            let albumListItem = buildAlbumlist(albumItem);
+            albumsContainer.appendChild(albumListItem[0]).insertAdjacentElement("afterend", albumListItem[1]);
             //On requête les pochettes associées aux albums
             getCoverArts(albumItem[1], displayCoverArt);
         });

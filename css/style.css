@@ -522,7 +522,7 @@ ul.result-list-item {
     font-weight: normal;
 }
 
-.cover-art-title {
+.album-title {
     margin: 3rem .5rem  1.5rem 0;
     padding: .5rem;
     max-width: max-content;
@@ -531,12 +531,12 @@ ul.result-list-item {
     font-weight: normal;
 }
 
-.cover-art-title > span {
+.album-description {
     font-size: 1.2rem;
     font-style: italic;
 }
 
-.cover-art-title + div {
+.album-arts-container {
     grid-column: 1/-1;
     display: grid;
     grid-template-columns: 1fr;
@@ -560,13 +560,13 @@ ul.result-list-item {
 }
 
 @media screen and (min-width: 48em) {
-    .cover-art-title + div {
+    .album-arts-container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media screen and (min-width: 62em) {
-    .cover-art-title + div {
+    .album-arts-container {
         grid-template-columns: repeat(4, 1fr);
     }
 }

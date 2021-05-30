@@ -33,7 +33,7 @@ const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
 const modalAlbum = modalBody.querySelector('.modal-list .album-list');
 const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div');
-const coverArtsContainer = modal.querySelector('.cover-arts');
+const albumsContainer = modal.querySelector('.albums-container');
 
 //EVENT AU CLICK SUR LA FERMETURE DE LA MODALE
 closeModal.addEventListener('click', function() {
@@ -41,7 +41,7 @@ closeModal.addEventListener('click', function() {
     //On fermeture de la modale
     modal.classList.remove('open-modal');
     //On supprime la liste d'albums
-    coverArtsContainer.innerHTML = "";
+    albumsContainer.innerHTML = "";
 });
 
 //EVENT A LA VALIDATION DU FORMAULAIRE DE RECHERCHE
