@@ -78,14 +78,15 @@ function getCoverArts(albumArray, index, callback) {
         });
         coverArtsRequest.addEventListener("readystatechange", function () {
             if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
+                let coverArtDestination = document.getElementById(albumArray[index][1]); //Le container des pochettes
                 if (coverArtsRequest.status === 200) {
                     let response = JSON.parse(coverArtsRequest.responseText);
                     response = response.images;
                     callback(response, albumArray[index][1]);
-                } else if (coverArtsRequest.status === 404 && document.getElementById(albumArray[index][1]) !== null) {//Si la réponse n'est pas valide et que les containers des messages sont bien créés
-                    document.getElementById(albumArray[index][1]).textContent = "↳ No cover art available";
-                } else if(document.getElementById(albumArray[index][1]) !== null) {
-                    document.getElementById(albumArray[index][1]).textContent = "↳ Something went wrong";
+                } else if (coverArtsRequest.status === 404 && coverArtDestination !== null) {//Si la réponse n'est pas valide et que les containers des messages sont bien créés
+                    coverArtDestination.textContent = "↳ No cover art available";
+                } else if(coverArtDestination !== null) {
+                    coverArtDestination.textContent = "↳ Something went wrong";
                 }
                 //On attend que la requête d'une pochette soit terminée pour lancer la suivante
                 index++;
