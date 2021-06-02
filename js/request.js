@@ -8,8 +8,6 @@ function getBySearch(type, term, callback, offset) {
     //Adaptation de la requête au type de recherche
     if (type === 'all') {
         searchUrl += 'recording:' + term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
-    } else if(type === 'recording') {
-        searchUrl += term;
     } else {
         searchUrl += type + ':' + term;
     }
@@ -68,11 +66,43 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
     });
 
     //Interruption de la requête si on ferme la modale
-    closeModal.addEventListener('click', function() {
+    closeModalBtn.addEventListener('click', function() {
         genresRatingRequest.abort();
     });
 
     genresRatingRequest.send();
+}
+
+/*=====REQUETE DES SUGGESTIONS EVENTUELLES=====*/
+function getSuggestions(suggestions, callback) {
+    const suggestionsRequest = new XMLHttpRequest();
+
+    //URL de la requête
+    let searchUrl = "https://musicbrainz.org/ws/2/artist/?fmt=json&offset=0&limit=10&query=tag:" + encodeURIComponent(suggestions);
+    suggestionsRequest.open("GET", searchUrl, true);
+
+    //Affichage LOADING pendant le chargement de la requête
+    suggestionsRequest.addEventListener('loadstart', function() {
+        modalSuggestions.textContent = 'Loading...'
+    });
+
+    suggestionsRequest.addEventListener("readystatechange", function () {
+        if (suggestionsRequest.readyState === XMLHttpRequest.DONE) {
+            if (suggestionsRequest.status === 200) {
+                let response = JSON.parse(suggestionsRequest.responseText);
+                callback(response.artists);
+            } else {
+                modalSuggestions.textContent = "No suggestion for this title";
+            }
+        }
+    });
+
+    //Interruption de la requête si on ferme la modale
+    closeModalBtn.addEventListener('click', function() {
+        suggestionsRequest.abort();
+    });
+
+    suggestionsRequest.send();
 }
 
 /*=====REQUETE DES POCHETTES ASSOCIEES A UN ID D'ALBUM=====*/
@@ -110,7 +140,7 @@ function getCoverArts(albumArray, index, callback) {
         });
 
         //Interruption de la requête si on ferme la modale
-        closeModal.addEventListener('click', function() {
+        closeModalBtn.addEventListener('click', function() {
             coverArtsRequest.abort();
         });
 

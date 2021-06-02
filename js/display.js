@@ -1,13 +1,14 @@
 /*=====AFFICHER LA LISTE DES RESULTATS=====*/
 function displayTitleList(response, type, term, offset) {
     //Gestion des erreurs
-    title = "Unknown title";
-    titleId = "";
-    artist = "Unknow artist";
-    album = ["Unknown album"];
-    titleLength = "Unknown length";
-    count = response.count;
-    recordings = response.recordings;
+    let title = "Unknown title";
+    let titleId = "";
+    let artist = "Unknow artist";
+    let album = ["Unknown album"];
+    let titleLength = "Unknown length";
+    let suggestions = "";
+    let count = response.count;
+    let recordings = response.recordings;
 
     //S'il n'y a aucun résultat
     if (count === 0) {
@@ -110,6 +111,7 @@ function displayTitleList(response, type, term, offset) {
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
 function displayModal(nb, title, artist, album, titleLength, titleId) {
+    //On affiche l'index de la recherche
     modalHeader.textContent = "#" + nb;
 
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
@@ -163,17 +165,19 @@ function displayRating(response) {
     modalRating.textContent = rating;
 }
 
-/*=====AFFICHER LES GENRES S'ILS SONT DISPONIBLES=====*/
+/*=====AFFICHER LES GENRES S'ILS SONT DISPONIBLES ET PREPARER LES SUGGESTIONS=====*/
 function displayGenres(response) {
     let genres = response.genres;
 
     //Initialisation tableaux temporaire et final
     let genreArrayTemp = [];
     let genreArrayFinal = [];
+    let suggestions = [];
 
     //Si aucun genre n'est retourné
     if (genres.length == 0) {
         modalGenres.textContent = "No genre found for this title";
+        modalSuggestions.textContent = "No suggestion for this title";
     } else { //Si la réponse retourne au moins un genre
         for (i in genres) {
             //On ne garde que les genres ayant un nombre positif de votes
@@ -189,16 +193,32 @@ function displayGenres(response) {
             return b[1] - a[1];
         });
 
-        //On construit le tableau final avec les uniquement les genres par ordre de popularité
+        //On construit le tableau final avec uniquement les genres par ordre de popularité
         genreArrayTemp.map(function(genreTempItem) {
             genreArrayFinal.push(genreTempItem[0]);
         });
+
+        //On requête les éventuelles suggestions selon les genres
+        suggestions = genreArrayFinal.join("+");
+        getSuggestions(suggestions, displaySuggestions);
 
         //On créée une chaine de caractères à partir du tableau final
         genreArrayFinal = genreArrayFinal.join(", ");
 
         //On affiche la chaine de caractères
         modalGenres.textContent = genreArrayFinal;
+    }
+}
+
+/*=====AFFICHER UNE LISTE DE SUGGESTIONS SI DISPONIBLE=====*/
+function displaySuggestions(artists) {
+    if (artists.length > 0) {
+        modalSuggestions.textContent = "";
+        for (i in artists) {
+            modalSuggestions.appendChild(buildSuggestions(artists[i].name));
+        }
+    } else {
+        modalSuggestions.textContent = "No suggestion for this title";
     }
 }
 

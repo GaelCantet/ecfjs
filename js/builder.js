@@ -1,5 +1,5 @@
 /*=====CONSTRUCTION DES ELEMENTS DE LA LISTE RESULTAT DE RECHERCHE=====*/
-function buildTitleList(title, artist, album, nb, titleLength, titleId) {
+function buildTitleList(title, artist, album, nb, titleLength, titleId, suggestions) {
     //Création de la liste "Titre"
     let listItem = document.createElement('ul');
 
@@ -43,7 +43,7 @@ function buildTitleList(title, artist, album, nb, titleLength, titleId) {
         listBtn.addEventListener('click', function() {
             modal.classList.add('open-modal');
             document.body.classList.add('no-scroll');
-            displayModal(nb, title, artist, album, titleLength, titleId);
+            displayModal(nb, title, artist, album, titleLength, titleId, suggestions);
         });
         listItemBtn.appendChild(listBtn);
     }
@@ -77,6 +77,21 @@ function buildLastItem(type, term, offset) {
         lastItem.appendChild(getMoreBtn);
     }
     return lastItem;
+}
+
+/*=====CONSTRUCTION DE LA LISTE DE SUGGESTIONS=====*/
+function buildSuggestions(artist) {
+    //On crée un boutton
+    let artistButton = document.createElement('button');
+    artistButton.classList.add('suggestion-button');
+    artistButton.textContent = artist;
+    artistButton.addEventListener('click', function(){//Au click on ferme la modale et on lance une requête sur cet artiste
+        closeModal();
+        submitRequest('artist', artist);
+        inputSearch.value = artist;
+        typeSearch.value = 'artist';
+    });
+    return artistButton;
 }
 
 /*=====CONSTRUCTION D'UN ALBUM A AFFICHER DANS LA MODALE=====*/

@@ -1,17 +1,6 @@
-//ITERATEURS
+//INITIALISATION ITERATEURS
 let i;
 let j;
-
-//INITIALISATION VARIABLES
-let title;
-let titleId;
-let artist;
-let album;
-let albumDescription;
-let albumId;
-let titleLength;
-let count;
-let recordings;
 
 //BOUTON DE RETOUR EN HAUT DE PAGE
 const toTopBtn = document.querySelector('.to-top');
@@ -27,17 +16,20 @@ const resultList = document.getElementById('search-result');
 const modal = document.querySelector('.modal');
 const modalHeader = modal.querySelector('.modal-header-title');
 const modalBody = modal.querySelector('.modal-body');
-const closeModal = modal.querySelector('header button');
+const closeModalBtn = modal.querySelector('header button');
 const modalTitle = modalBody.querySelector('.modal-list .modal-list-title p');
 const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-length p');
 const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
+const modalSuggestions = modalBody.querySelector('.modal-list .modal-list-suggestions p');
 const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div');
 const albumsContainer = modal.querySelector('.albums-container');
 
 
 //EVENT AU CLICK SUR LA FERMETURE DE LA MODALE
-closeModal.addEventListener('click', function() {
+closeModalBtn.addEventListener('click', closeModal);
+
+function closeModal() {
     document.body.classList.remove('no-scroll');
     //On fermeture de la modale
     modal.classList.remove('open-modal');
@@ -45,27 +37,38 @@ closeModal.addEventListener('click', function() {
     albumsContainer.innerHTML = "";
     //On remet le background-size du rating à 0
     modalRating.style.backgroundSize = 0;
-});
+    //On vide les suggestions
+    modalSuggestions.innerHTML = "";
+    //On vide les genres
+    modalGenres.innerHTML = "";
+}
+
 
 //EVENT A LA VALIDATION DU FORMAULAIRE DE RECHERCHE
 document.querySelector('.search-form').addEventListener('submit', function(ev) {
     ev.preventDefault();
 
+    //Si le champ de recherche est vide ou uniquement composé d'espaces, on affiche un message d'erreur
+    if (inputSearch.value === "" || !inputSearch.value.replace(/\s/g, '').length) {
+        resultHeader.textContent = "Your query is incorrect";
+    } else { 
+        submitRequest(typeSearch.value, inputSearch.value);
+    }
+});
+
+//VIDE LA LISTE DE RESULTATS, TRAITE LA CHAINE DE CARACTERES ET APPELLE LA FONCTION DE REQUETE
+function submitRequest(type, term) {
     //On vide la liste de résultats et son header
     resultHeader.innerHTML = "";
     resultList.innerHTML = "";
 
-    //Si le champ de recherche est vide ou uniquement composé d'espaces, on affiche un message d'erreur
-    if (inputSearch.value === "" || !inputSearch.value.replace(/\s/g, '').length) {
-        resultHeader.textContent = "Your query is incorrect";
-    } else { //On traite l'input.value sous la forme: ("chaine de caractères" || (chaine && de && caractères))
-        let term = '("' + inputSearch.value + '" || (' + inputSearch.value.split(" ").join(" && ") + '))';
-        
-        //Puis on encode le résultat et on appelle la requête
-        term = encodeURIComponent(term);
-        getBySearch(typeSearch.value, term, displayTitleList, 0);
-    }
-});
+    //On traite l'input.value sous la forme: ("chaine de caractères" || (chaine && de && caractères))
+    term = '("' + term + '" || (' + term.split(" ").join(" && ") + '))';
+
+    //Puis on encode le résultat et on appelle la requête
+    term = encodeURIComponent(term);
+    getBySearch(type, term, displayTitleList, 0);
+}
 
 //EVENT D'APPARITION DU BOUTTON TO-TOP AU SCROLL
 window.addEventListener('scroll', function() {

@@ -523,8 +523,29 @@ ul.result-list-item {
     transition: background-size .5s ease-out .5s;
 }
 
-.modal-list-genres{
+.modal-list-genres {
     font-size: 1.8rem;
+}
+
+.modal-list-suggestions {
+    grid-column: 1/-1;
+    font-size: 1.8rem;
+}
+
+.suggestion-button {
+    margin-right: .5rem;
+    margin-bottom: .5rem;
+    padding: .5rem;
+    background-color: var(--primary);
+    border: none;
+    border-radius: .4rem;
+    color: #fff;
+    transition: .3s;
+}
+
+.suggestion-button:hover,
+.suggestion-button:focus {
+    background-color: var(--lightBlue);
 }
 
 @media screen and (min-width: 48em){
