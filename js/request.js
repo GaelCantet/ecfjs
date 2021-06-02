@@ -1,8 +1,10 @@
 /*=====REQUETE DE RECHERCHE PAR TERME(S)=====*/
 function getBySearch(type, term, callback, offset) {
-    let searchRequest = new XMLHttpRequest();
+    const searchRequest = new XMLHttpRequest();
+
     //URL de la requête
     let searchUrl = "https://musicbrainz.org/ws/2/recording/?fmt=json&offset=" + offset + "&limit=100&query=";
+
     //Adaptation de la requête au type de recherche
     if (type === 'all') {
         searchUrl += 'recording:' + term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
@@ -12,6 +14,7 @@ function getBySearch(type, term, callback, offset) {
         searchUrl += type + ':' + term;
     }
     searchRequest.open("GET", searchUrl, true);
+
     //Affichage LOADING pendant le chargement de la requête
     searchRequest.addEventListener('loadstart', function() {
         if (offset > 0) {
@@ -22,6 +25,7 @@ function getBySearch(type, term, callback, offset) {
             resultHeader.textContent = "Loading...";
         }
     });
+
     searchRequest.addEventListener("readystatechange", function () {
         if (searchRequest.readyState === XMLHttpRequest.DONE) {
             if (searchRequest.status === 200) {
@@ -32,20 +36,24 @@ function getBySearch(type, term, callback, offset) {
             }
         }
     });
+
     searchRequest.send();
 }
 
 /*=====REQUETE DES GENRES & DE LA NOTE ASSOCIES A UN ID D'ALBUM=====*/
 function getGenresAndRating(titleId, firstCallback, secondCallback) {
     const genresRatingRequest = new XMLHttpRequest();
+
     //URL de la requête
     let searchUrl = "https://musicbrainz.org/ws/2/recording/" + encodeURIComponent(titleId) + "?inc=genres+ratings&fmt=json";
     genresRatingRequest.open("GET", searchUrl, true);
+
     //Affichage LOADING pendant le chargement de la requête
     genresRatingRequest.addEventListener('loadstart', function() {
         modalGenres.textContent = "Loading...";
         modalRating.textContent = "Loading...";
     });
+
     genresRatingRequest.addEventListener("readystatechange", function () {
         if (genresRatingRequest.readyState === XMLHttpRequest.DONE) {
             if (genresRatingRequest.status === 200) {
@@ -58,10 +66,12 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
             }
         }
     });
+
     //Interruption de la requête si on ferme la modale
     closeModal.addEventListener('click', function() {
         genresRatingRequest.abort();
     });
+
     genresRatingRequest.send();
 }
 
@@ -69,16 +79,20 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
 function getCoverArts(albumArray, index, callback) {
     if (index < albumArray.length) {//S'il reste des des items à traiter dans le tableau
         const coverArtsRequest = new XMLHttpRequest();
+
         //URL de la requête
         let searchUrl = "https://coverartarchive.org/release/" + encodeURIComponent(albumArray[index][1]);
         coverArtsRequest.open("GET", searchUrl, true);
+
         //Affichage LOADING pendant le chargement de la requête
         coverArtsRequest.addEventListener('loadstart', function() {
             document.getElementById(albumArray[index][1]).textContent = "↳ Loading...";
         });
+
         coverArtsRequest.addEventListener("readystatechange", function () {
             if (coverArtsRequest.readyState === XMLHttpRequest.DONE) {
                 let coverArtDestination = document.getElementById(albumArray[index][1]); //Le container des pochettes
+
                 if (coverArtsRequest.status === 200) {
                     let response = JSON.parse(coverArtsRequest.responseText);
                     response = response.images;
@@ -88,15 +102,18 @@ function getCoverArts(albumArray, index, callback) {
                 } else if(coverArtDestination !== null) {
                     coverArtDestination.textContent = "↳ Something went wrong";
                 }
+
                 //On attend que la requête d'une pochette soit terminée pour lancer la suivante
                 index++;
                 getCoverArts(albumArray, index, displayCoverArt);
             }
         });
+
         //Interruption de la requête si on ferme la modale
         closeModal.addEventListener('click', function() {
             coverArtsRequest.abort();
         });
+
         coverArtsRequest.send();
     }
 }

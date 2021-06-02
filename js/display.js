@@ -5,24 +5,27 @@ function displayTitleList(response, type, term, offset) {
     titleId = "";
     artist = "Unknow artist";
     album = ["Unknown album"];
-    albumDescription = "No details available";
     titleLength = "Unknown length";
     count = response.count;
     recordings = response.recordings;
+
     //S'il n'y a aucun résultat
     if (count === 0) {
         resultHeader.textContent = "No result";
     } else { //Sinon
+
         //Suppression last-item si il existe
         if (document.getElementById('last-item') !== null) {
             document.getElementById('last-item').remove();
         }
+
         //Si le offset = 0, on affiche le header
         if (offset === 0) {
             resultHeader.innerHTML = "";
             let headerContent = buildTitleList("Title", "Artist", [["Album", ""]], "#", count);
             resultHeader.appendChild(headerContent);
         }
+
         //Pour chaque titre trouvé via la recherche
         for (i in recordings) {
             //L'ID du titre
@@ -31,24 +34,32 @@ function displayTitleList(response, type, term, offset) {
                 //Le nom du titre
                 title = recordings[i].title;
             }
+
+            //La longueur du titre
             if (recordings[i].hasOwnProperty('length')) {
                 //La longueur du titre convertie au format HH:MM:SS
                 titleLength = new Date(recordings[i].length).toISOString().substr(11, 8)
             }
+
+            //Le(s) nom(s) de(s) l'artiste(s)
             if (recordings[i].hasOwnProperty('artist-credit')) {
-                //Le(s) nom(s) de(s) l'artiste(s)
                 artist = [];
                 for (let j = 0; j < recordings[i]["artist-credit"].length; j++) {
                     artist.push(recordings[i]["artist-credit"][j].name);
                 }
                 artist = artist.join(" & ");
             }
+
+            //Le(s) album(s)
             if (recordings[i].hasOwnProperty('releases')) {
                 album = [];
                 albumId = [];
-                albumDescription = [];
+
                 //Pour chaque album associé au titre
                 for (j = 0; j < recordings[i].releases.length; j++) {
+                    //On réinitialise le tableau à vide
+                    albumDescription = [];
+
                     if (recordings[i].releases[j].hasOwnProperty('media')) {
                         albumDescription.push(recordings[i].releases[j].media[0].format);
                     }
@@ -61,37 +72,37 @@ function displayTitleList(response, type, term, offset) {
                     if (recordings[i].releases[j].hasOwnProperty('country')) {
                         albumDescription.push(recordings[i].releases[j].country);
                     }
+
+                    //Si aucune propriété n'est présente
+                    if (albumDescription.length == 0) {
+                        albumDescription.push('No details available');
+                    }
+
                     //On transforme la descrition en chaine de caractères
                     albumDescription = albumDescription.join(", ");
+                    
                     //Tableau contenant les noms d'albums, leur id et leur description
                     album.push([
                         recordings[i].releases[j].title,//Le nom de l'album
                         recordings[i].releases[j].id,//L'id de l'album
                         albumDescription//La description de l'album
                     ]);
-                    albumDescription = [];
                 }
             }
             //Construction de la liste du titre
             i = parseInt(i); //On s'assure que i est un entier pour l'additioner à l'offset
             let listItem = buildTitleList(title, artist, album, offset + i, titleLength, titleId);
+
             //Intégration de la liste
             resultList.appendChild(listItem);
         }
         
         //Incrémentation de l'offset pour préparer la suite de la liste
         offset += 100;
+
         //Si il reste des éléments dans la recherche, on affiche un bouton pour charger la suite
         if (offset < count) {
-            let getMoreBtn = document.createElement('button');
-            getMoreBtn.textContent = "Load more";
-            //Au clic sur le bouton on relance une requête sur la même recherche avec le nouvel offset
-            getMoreBtn.addEventListener('click', function() {
-                document.getElementById('last-item').remove();
-                getBySearch(type, term, displayTitleList, offset);
-            });
-            let lastItem = buildLastItem();
-            lastItem.appendChild(getMoreBtn);
+            let lastItem = buildLastItem(type, term, offset);
             resultList.appendChild(lastItem);
         }
     }
@@ -100,12 +111,15 @@ function displayTitleList(response, type, term, offset) {
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
 function displayModal(nb, title, artist, album, titleLength, titleId) {
     modalHeader.textContent = "#" + nb;
+
     //On affiche le titre, sa durée et l'artiste(s) associé(s)
     modalTitle.textContent = title;
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
+
     //On requête le(s) genre(s) et la note du titre
     getGenresAndRating(titleId, displayGenres, displayRating);
+
     //Si au moins un album est associé au titre
     if (album[0][0] !== "Unknown album") {
         album.map(function(albumItem) {
@@ -113,6 +127,7 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
             let albumListItem = buildAlbumlist(albumItem);
             albumsContainer.appendChild(albumListItem[0]).insertAdjacentElement("afterend", albumListItem[1]);
         });
+
         //On requête la pochette du 1er album (la fonction boucle pour afficher les autres)
         getCoverArts(album, 0, displayCoverArt);
     } else { //Si aucun album n'est associé au titre
@@ -124,20 +139,26 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
 function displayRating(response) {
     let ratings = response.rating;
     let rating = "";
+
     //Réinitialisation de bakground-size à 0
     modalRating.style.backgroundSize = 0;
+
     //Si des votes sont disponibles
     if (ratings["votes-count"] > 0) {
         rating = ratings.value;
+
         //Conversion de la note sur 100
         rating *= 20;
+
         //Conversion en chaine de caractères + pourcentage
         rating += "%";
+
         //Changement du background-size en fonction de la note
         modalRating.style.backgroundSize = rating;
     } else { //Si aucun vote n'est disponible
         rating = "No rating found for this title";
     }
+
     //Affichage de la valeur rating
     modalRating.textContent = rating;
 }
@@ -145,9 +166,11 @@ function displayRating(response) {
 /*=====AFFICHER LES GENRES S'ILS SONT DISPONIBLES=====*/
 function displayGenres(response) {
     let genres = response.genres;
+
     //Initialisation tableaux temporaire et final
     let genreArrayTemp = [];
     let genreArrayFinal = [];
+
     //Si aucun genre n'est retourné
     if (genres.length == 0) {
         modalGenres.textContent = "No genre found for this title";
@@ -160,16 +183,20 @@ function displayGenres(response) {
                 genreArrayTemp.push(genreArrayItem);
             }
         }
+
         //On trie le tableau par ordre décroissant du nombre de votes
         genreArrayTemp.sort(function(a, b){
             return b[1] - a[1];
         });
+
         //On construit le tableau final avec les uniquement les genres par ordre de popularité
         genreArrayTemp.map(function(genreTempItem) {
             genreArrayFinal.push(genreTempItem[0]);
         });
+
         //On créée une chaine de caractères à partir du tableau final
         genreArrayFinal = genreArrayFinal.join(", ");
+
         //On affiche la chaine de caractères
         modalGenres.textContent = genreArrayFinal;
     }
@@ -177,16 +204,20 @@ function displayGenres(response) {
 
 /*=====AFFICHER LES POCHETTES SI ELLES SONT DISPONIBLES=====*/
 function displayCoverArt(coverArtResponse, albumId) {
+    let singleAlbumContainer = document.getElementById(albumId);
+
     //Si on obtient une réponse mais qu'aucune image n'est diponible 
     if (coverArtResponse.length < 1) {
-        document.getElementById(albumId).textContent = "↳ No cover art found";
+        singleAlbumContainer.textContent = "↳ No cover art found";
     } else { //Sinon
-        document.getElementById(albumId).textContent = "";
+        singleAlbumContainer.textContent = "";
+
         //Pour chaque image disponible
         for (i in coverArtResponse) {
             //On récupère le(s) type(s) d'image pour en faire le alt de l'img
             let altText = coverArtResponse[i].types;
             let coverArt = "";
+
             //On cherche d'abord les plus petites
             if(coverArtResponse[i].thumbnails.hasOwnProperty('250')) {
                 coverArt = coverArtResponse[i].thumbnails['250'];
@@ -195,10 +226,12 @@ function displayCoverArt(coverArtResponse, albumId) {
             } else { //Ou on prend l'image par défaut
                 coverArt = coverArtResponse[i].image;
             }
+
             //On construit l'élément image et ses attributs
             coverArt = buildCoverArt(coverArt, altText);
+
             //On affiche l'image dans le container
-            document.getElementById(albumId).appendChild(coverArt);
+            singleAlbumContainer.appendChild(coverArt);
         }
     }
 }

@@ -1,7 +1,6 @@
 //ITERATEURS
 let i;
 let j;
-let k;
 
 //INITIALISATION VARIABLES
 let title;
@@ -23,6 +22,7 @@ const typeSearch = document.getElementById('type-input');
 //RESULT LIST
 const resultHeader = document.querySelector('.result-header .container');
 const resultList = document.getElementById('search-result');
+
 //MODALE
 const modal = document.querySelector('.modal');
 const modalHeader = modal.querySelector('.modal-header-title');
@@ -34,6 +34,7 @@ const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
 const modalRating = modalBody.querySelector('.modal-list .modal-list-rating div');
 const albumsContainer = modal.querySelector('.albums-container');
+
 
 //EVENT AU CLICK SUR LA FERMETURE DE LA MODALE
 closeModal.addEventListener('click', function() {
@@ -49,14 +50,17 @@ closeModal.addEventListener('click', function() {
 //EVENT A LA VALIDATION DU FORMAULAIRE DE RECHERCHE
 document.querySelector('.search-form').addEventListener('submit', function(ev) {
     ev.preventDefault();
+
     //On vide la liste de résultats et son header
     resultHeader.innerHTML = "";
     resultList.innerHTML = "";
+
     //Si le champ de recherche est vide ou uniquement composé d'espaces, on affiche un message d'erreur
     if (inputSearch.value === "" || !inputSearch.value.replace(/\s/g, '').length) {
         resultHeader.textContent = "Your query is incorrect";
     } else { //On traite l'input.value sous la forme: ("chaine de caractères" || (chaine && de && caractères))
         let term = '("' + inputSearch.value + '" || (' + inputSearch.value.split(" ").join(" && ") + '))';
+        
         //Puis on encode le résultat et on appelle la requête
         term = encodeURIComponent(term);
         getBySearch(typeSearch.value, term, displayTitleList, 0);
