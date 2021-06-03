@@ -6,7 +6,6 @@ function displayTitleList(response, type, term, offset) {
     let artist = "Unknow artist";
     let album = ["Unknown album"];
     let titleLength = "Unknown length";
-    let suggestions = "";
     let count = response.count;
     let recordings = response.recordings;
 
@@ -45,7 +44,7 @@ function displayTitleList(response, type, term, offset) {
             //Le(s) nom(s) de(s) l'artiste(s)
             if (recordings[i].hasOwnProperty('artist-credit')) {
                 artist = [];
-                for (let j = 0; j < recordings[i]["artist-credit"].length; j++) {
+                for (j in recordings[i]["artist-credit"]) {
                     artist.push(recordings[i]["artist-credit"][j].name);
                 }
                 artist = artist.join(" & ");
@@ -57,7 +56,7 @@ function displayTitleList(response, type, term, offset) {
                 albumId = [];
 
                 //Pour chaque album associé au titre
-                for (j = 0; j < recordings[i].releases.length; j++) {
+                for (j in recordings[i].releases) {
                     //On réinitialise le tableau à vide
                     albumDescription = [];
 
@@ -169,7 +168,7 @@ function displayRating(response) {
 function displayGenres(response) {
     let genres = response.genres;
 
-    //Initialisation tableaux temporaire et final
+    //Initialisation tableaux temporaire, final et suggestions
     let genreArrayTemp = [];
     let genreArrayFinal = [];
     let suggestions = [];
@@ -199,7 +198,8 @@ function displayGenres(response) {
         });
 
         //On requête les éventuelles suggestions selon les genres
-        suggestions = genreArrayFinal.join("+");
+        suggestions = "\"" + genreArrayFinal.join("\" OR \"") + "\"";
+        console.log(suggestions);
         getSuggestions(suggestions, displaySuggestions);
 
         //On créée une chaine de caractères à partir du tableau final

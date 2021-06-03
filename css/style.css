@@ -533,8 +533,8 @@ ul.result-list-item {
 }
 
 .suggestion-button {
+    margin-top: .5rem;
     margin-right: .5rem;
-    margin-bottom: .5rem;
     padding: .5rem;
     background-color: var(--primary);
     border: none;
