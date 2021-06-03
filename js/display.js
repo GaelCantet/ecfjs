@@ -198,7 +198,7 @@ function displayGenres(response) {
         });
 
         //On requête les éventuelles suggestions selon les genres
-        suggestions = "\"" + genreArrayFinal.join("\" OR \"") + "\"";
+        suggestions = "(\"" + genreArrayFinal.join("\" OR \"") + "\")";
         console.log(suggestions);
         getSuggestions(suggestions, displaySuggestions);
 
