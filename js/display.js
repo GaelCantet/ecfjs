@@ -6,7 +6,7 @@ function displayTitleList(response, type, term, offset) {
     let artist = "Unknow artist";
     let album = ["Unknown album"];
     let titleLength = "Unknown length";
-    let suggestions = "";
+    let suggestions = [];
     let count = response.count;
     let recordings = response.recordings;
 
@@ -185,8 +185,14 @@ function displayGenres(response, suggestions) {
     //Si aucun genre n'est retourné
     if (genres.length == 0) {
         modalGenres.textContent = "No genre found for this title";
-        //On requete les suggestions selon le disambiguiation
-        getSuggestions(suggestions, displaySuggestions);
+        //Si on a pu trouvé une propriété "disambiguation"
+        if (suggestions.length > 0) {
+            //On requete les suggestions selon le disambiguiation
+            getSuggestions(suggestions, displaySuggestions);
+        } else {
+            modalSuggestions.textContent = "No suggestion for this title";
+        }
+        
     } else { //Si la réponse retourne au moins un genre
         for (i in genres) {
             //On ne garde que les genres ayant un nombre positif de votes
