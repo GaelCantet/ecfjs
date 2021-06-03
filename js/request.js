@@ -39,7 +39,7 @@ function getBySearch(type, term, callback, offset) {
 }
 
 /*=====REQUETE DES GENRES & DE LA NOTE ASSOCIES A UN ID D'ALBUM=====*/
-function getGenresAndRating(titleId, firstCallback, secondCallback) {
+function getGenresAndRating(titleId, suggestions, firstCallback, secondCallback) {
     const genresRatingRequest = new XMLHttpRequest();
 
     //URL de la requête
@@ -56,7 +56,7 @@ function getGenresAndRating(titleId, firstCallback, secondCallback) {
         if (genresRatingRequest.readyState === XMLHttpRequest.DONE) {
             if (genresRatingRequest.status === 200) {
                 let response = JSON.parse(genresRatingRequest.responseText);
-                firstCallback(response);
+                firstCallback(response, suggestions);
                 secondCallback(response);
             } else {
                 modalGenres.textContent = "Something went wrong";

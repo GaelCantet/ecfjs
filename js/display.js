@@ -6,6 +6,7 @@ function displayTitleList(response, type, term, offset) {
     let artist = "Unknow artist";
     let album = ["Unknown album"];
     let titleLength = "Unknown length";
+    let suggestions = "";
     let count = response.count;
     let recordings = response.recordings;
 
@@ -48,6 +49,15 @@ function displayTitleList(response, type, term, offset) {
                     artist.push(recordings[i]["artist-credit"][j].name);
                 }
                 artist = artist.join(" & ");
+
+                //On anticipe une query de suggestions si aucun genre n'est trouvé
+                if (recordings[i]['artist-credit'][0].artist.hasOwnProperty('disambiguation')) {
+                    suggestions = recordings[i]['artist-credit'][0].artist.disambiguation
+                    .match(/([a-zA-Z0-9])*/g)
+                    .filter(item => item !== "");
+                    suggestions = "(\"" + suggestions.join("\" OR \"") + "\")";
+                }
+                
             }
 
             //Le(s) album(s)
@@ -91,7 +101,7 @@ function displayTitleList(response, type, term, offset) {
             }
             //Construction de la liste du titre
             i = parseInt(i); //On s'assure que i est un entier pour l'additioner à l'offset
-            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, titleId);
+            let listItem = buildTitleList(title, artist, album, offset + i, titleLength, titleId, suggestions);
 
             //Intégration de la liste
             resultList.appendChild(listItem);
@@ -109,7 +119,7 @@ function displayTitleList(response, type, term, offset) {
 }
 
 /*=====AFFICHER LES INFORMATIONS DANS LA MODALE=====*/
-function displayModal(nb, title, artist, album, titleLength, titleId) {
+function displayModal(nb, title, artist, album, titleLength, titleId, suggestions) {
     //On affiche l'index de la recherche
     modalHeader.textContent = "#" + nb;
 
@@ -119,7 +129,7 @@ function displayModal(nb, title, artist, album, titleLength, titleId) {
     modalArtist.textContent = artist;
 
     //On requête le(s) genre(s) et la note du titre
-    getGenresAndRating(titleId, displayGenres, displayRating);
+    getGenresAndRating(titleId, suggestions, displayGenres, displayRating);
 
     //Si au moins un album est associé au titre
     if (album[0][0] !== "Unknown album") {
@@ -165,18 +175,18 @@ function displayRating(response) {
 }
 
 /*=====AFFICHER LES GENRES S'ILS SONT DISPONIBLES ET PREPARER LES SUGGESTIONS=====*/
-function displayGenres(response) {
+function displayGenres(response, suggestions) {
     let genres = response.genres;
 
     //Initialisation tableaux temporaire, final et suggestions
     let genreArrayTemp = [];
     let genreArrayFinal = [];
-    let suggestions = [];
 
     //Si aucun genre n'est retourné
     if (genres.length == 0) {
         modalGenres.textContent = "No genre found for this title";
-        modalSuggestions.textContent = "No suggestion for this title";
+        //On requete les suggestions selon le disambiguiation
+        getSuggestions(suggestions, displaySuggestions);
     } else { //Si la réponse retourne au moins un genre
         for (i in genres) {
             //On ne garde que les genres ayant un nombre positif de votes
@@ -198,8 +208,8 @@ function displayGenres(response) {
         });
 
         //On requête les éventuelles suggestions selon les genres
+        suggestions = [];
         suggestions = "(\"" + genreArrayFinal.join("\" OR \"") + "\")";
-        console.log(suggestions);
         getSuggestions(suggestions, displaySuggestions);
 
         //On créée une chaine de caractères à partir du tableau final
