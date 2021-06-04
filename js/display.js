@@ -55,7 +55,14 @@ function displayTitleList(response, type, term, offset) {
                     suggestions = recordings[i]['artist-credit'][0].artist.disambiguation
                     .match(/([a-zA-Z0-9])*/g)
                     .filter(item => item !== "");
-                    suggestions = "(\"" + suggestions.join("\" OR \"") + "\")";
+                    for (j in suggestions) {
+                        if (genresConst.indexOf(suggestions[j])) {
+                            suggestions[j] += '^3';
+                        } else if (suggestions[j].match(/[0-9s]/g)) {
+                            suggestions[j] += '^2';
+                        }
+                    }
+                    suggestions = "(" + suggestions.join(" OR ") + ")";
                 }
                 
             }
