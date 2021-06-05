@@ -41,6 +41,7 @@ function buildTitleList(title, artist, album, nb, titleLength, titleId, suggesti
 
         //Si on clique sur le bouton on bloque le scroll du body et on ouvre la modale
         listBtn.addEventListener('click', function() {
+            albumsContainer.innerHTML = "";//On vide l'album container à l'ouverture et non à la fermeture pour éviter les erreurs de DOM
             modal.classList.add('open-modal');
             document.body.classList.add('no-scroll');
             displayModal(nb, title, artist, album, titleLength, titleId, suggestions);
@@ -83,7 +84,7 @@ function buildLastItem(type, term, offset) {
 function buildSuggestions(artist) {
     //On crée un boutton
     let artistButton = document.createElement('button');
-    artistButton.classList.add('suggestion-button');
+    artistButton.classList.add('btn-secondary');
     artistButton.textContent = artist;
     artistButton.addEventListener('click', function(){//Au click on ferme la modale et on lance une requête sur cet artiste
         closeModal();

@@ -52,19 +52,22 @@ function displayTitleList(response, type, term, offset) {
 
                 //On anticipe une query de suggestions si aucun genre n'est trouvé
                 if (recordings[i]['artist-credit'][0].artist.hasOwnProperty('disambiguation')) {
+                    //On crée un tableau à partir de disambiguation
                     suggestions = recordings[i]['artist-credit'][0].artist.disambiguation
-                    .match(/([a-zA-Z0-9])*/g)
+                    .toLowerCase()
+                    .match(/(hip\shop)|([a-z0-9])*/g)
                     .filter(item => item !== "");
+                    //On donne plus d'importance aux termes présents dans l'array genresConst et aux années
                     for (j in suggestions) {
-                        if (genresConst.indexOf(suggestions[j])) {
+                        if (genresConst.includes(suggestions[j])) {
                             suggestions[j] += '^3';
-                        } else if (suggestions[j].match(/[0-9s]/g)) {
+                        } else if (suggestions[j].match(/[0-9]/g)) {
                             suggestions[j] += '^2';
                         }
                     }
-                    suggestions = "(" + suggestions.join(" OR ") + ")";
+                    //On en fait une chaine de caractères
+                    suggestions = "(" + suggestions.join(" || ") + ")";
                 }
-                
             }
 
             //Le(s) album(s)
@@ -130,8 +133,9 @@ function displayModal(nb, title, artist, album, titleLength, titleId, suggestion
     //On affiche l'index de la recherche
     modalHeader.textContent = "#" + nb;
 
-    //On affiche le titre, sa durée et l'artiste(s) associé(s)
+    //On affiche le titre, sa durée et l'artiste(s) associé(s), et on met à jour le lien youtube
     modalTitle.textContent = title;
+    modalYoutube.setAttribute('href', 'https://www.youtube.com/results?search_query=' + artist + "+" + title);
     modalTitleLength.textContent = "(" + titleLength + ")";
     modalArtist.textContent = artist;
 
@@ -197,7 +201,7 @@ function displayGenres(response, suggestions) {
             //On requete les suggestions selon le disambiguiation
             getSuggestions(suggestions, displaySuggestions);
         } else {
-            modalSuggestions.textContent = "No suggestion for this title";
+            modalSuggestions.textContent = "No suggestion for this title / artist";
         }
         
     } else { //Si la réponse retourne au moins un genre
@@ -222,7 +226,7 @@ function displayGenres(response, suggestions) {
 
         //On requête les éventuelles suggestions selon les genres
         suggestions = [];
-        suggestions = "(\"" + genreArrayFinal.join("\" OR \"") + "\")";
+        suggestions = "(\"" + genreArrayFinal.join("\" || \"") + "\")";
         getSuggestions(suggestions, displaySuggestions);
 
         //On créée une chaine de caractères à partir du tableau final
@@ -241,7 +245,7 @@ function displaySuggestions(artists) {
             modalSuggestions.appendChild(buildSuggestions(artists[i].name));
         }
     } else {
-        modalSuggestions.textContent = "No suggestion for this title";
+        modalSuggestions.textContent = "No suggestion for this title / artist";
     }
 }
 

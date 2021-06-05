@@ -18,6 +18,7 @@ const modalHeader = modal.querySelector('.modal-header-title');
 const modalBody = modal.querySelector('.modal-body');
 const closeModalBtn = modal.querySelector('header button');
 const modalTitle = modalBody.querySelector('.modal-list .modal-list-title p');
+const modalYoutube = modalBody.querySelector('.youtube-link');
 const modalTitleLength = modalBody.querySelector('.modal-list .modal-list-length p');
 const modalArtist = modalBody.querySelector('.modal-list .modal-list-artist p');
 const modalGenres = modalBody.querySelector('.modal-list .modal-list-genres p');
@@ -33,8 +34,6 @@ function closeModal() {
     document.body.classList.remove('no-scroll');
     //On fermeture de la modale
     modal.classList.remove('open-modal');
-    //On supprime la liste d'albums
-    albumsContainer.innerHTML = "";
     //On remet le background-size du rating à 0
     modalRating.style.backgroundSize = 0;
     //On vide les suggestions

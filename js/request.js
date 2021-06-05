@@ -7,7 +7,7 @@ function getBySearch(type, term, callback, offset) {
 
     //Adaptation de la requête au type de recherche
     if (type === 'all') {
-        searchUrl += 'recording:' + term + '%20OR%20artist:' + term + '%20OR%20release:' + term;
+        searchUrl += 'recording:' + term + '%20||%20artist:' + term + '%20||%20release:' + term;
     } else {
         searchUrl += type + ':' + term;
     }
@@ -92,7 +92,7 @@ function getSuggestions(suggestions, callback) {
                 let response = JSON.parse(suggestionsRequest.responseText);
                 callback(response.artists);
             } else {
-                modalSuggestions.textContent = "No suggestion for this title";
+                modalSuggestions.textContent = "No suggestion for this title / artist";
             }
         }
     });
