@@ -8,9 +8,13 @@ const toTopBtn = document.querySelector('.to-top');
 //SEARCH FORM
 const inputSearch = document.getElementById('search-input');
 const typeSearch = document.getElementById('type-input');
+const previousQueryBtn = document.querySelector('.previous-query');
+const queriesHistory = [];
+let previousQuery = [];
 //RESULT LIST
 const resultHeader = document.querySelector('.result-header .container');
 const resultList = document.getElementById('search-result');
+
 
 //MODALE
 const modal = document.querySelector('.modal');
@@ -67,7 +71,27 @@ function submitRequest(type, term) {
     //Puis on encode le résultat et on appelle la requête
     term = encodeURIComponent(term);
     getBySearch(type, term, displayTitleList, 0);
+
+    //On ajoute la query à queriesHistory et on gère l'affichage de previousQueryBtn
+    queriesHistory.push([type, term]);
+    if (queriesHistory.length > 1) {
+        previousQueryBtn.style.display = "flex";
+    } else {
+        previousQueryBtn.style.display = "none";
+    }
 }
+
+//EVENT DE QUERY PRECEDENTE
+previousQueryBtn.addEventListener('click', function() {
+    queriesHistory.pop();//On supprime la dernière query de l'hitorique
+    previousQuery = queriesHistory.pop();//On relance la recherche précédente et on la supprime de l'historique
+    submitRequest(previousQuery[0], previousQuery[1]);
+
+    //On affiche la query originale dans le search-form
+    previousQuery[1] = decodeURIComponent(previousQuery[1]).match(/(".+"){1}/);
+    typeSearch.value = previousQuery[0];
+    inputSearch.value = previousQuery[1];
+});
 
 //EVENT D'APPARITION DU BOUTTON TO-TOP AU SCROLL
 window.addEventListener('scroll', function() {

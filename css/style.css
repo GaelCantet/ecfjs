@@ -194,6 +194,11 @@ body {
     margin-bottom: 1rem;
 }
 
+.form-group:last-of-type {
+    flex-direction: row;
+    align-items: center;
+}
+
 .form-input {
     padding: 1rem;
     border-radius: .4rem;
@@ -202,6 +207,14 @@ body {
 
 .form-input:focus {
     outline: .2rem solid var(--lightBlue);
+}
+
+.previous-query {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem;
+    cursor: pointer;
 }
 
 
