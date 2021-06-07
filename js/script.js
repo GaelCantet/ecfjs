@@ -85,10 +85,10 @@ function submitRequest(type, term) {
 previousQueryBtn.addEventListener('click', function() {
     queriesHistory.pop();//On supprime la dernière query de l'hitorique
     previousQuery = queriesHistory.pop();//On relance la recherche précédente et on la supprime de l'historique
+    previousQuery[1] = decodeURIComponent(previousQuery[1]).match(/"(.*?)"/)[1];
     submitRequest(previousQuery[0], previousQuery[1]);
 
     //On affiche la query originale dans le search-form
-    previousQuery[1] = decodeURIComponent(previousQuery[1]).match(/(".+"){1}/);
     typeSearch.value = previousQuery[0];
     inputSearch.value = previousQuery[1];
 });

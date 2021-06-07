@@ -217,6 +217,10 @@ body {
     cursor: pointer;
 }
 
+.submit-search-form {
+    flex-grow: 1;
+}
+
 
 @media screen and (min-width: 48rem) {
     .search-form {
